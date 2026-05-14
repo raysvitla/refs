@@ -11,11 +11,12 @@
     body.lightbox-open { overflow:hidden; }
     a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
     header { position:sticky; top:0; z-index:3; backdrop-filter: blur(16px); background:rgba(8,8,8,.82); border-bottom:1px solid var(--line); }
-    .bar { max-width:1440px; margin:0 auto; padding:18px 22px; display:grid; grid-template-columns:1fr auto; gap:16px; align-items:end; }
-    h1 { margin:0; font-size:clamp(34px, 7vw, 88px); line-height:.82; letter-spacing:-.08em; text-transform:uppercase; }
-    .dek { color:var(--muted); max-width:720px; margin:10px 0 0; }
-    .stats { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
-    .controls { max-width:1440px; margin:0 auto; padding:0 22px 18px; display:grid; grid-template-columns:minmax(220px, 360px) 1fr; gap:12px; }
+    .bar { max-width:1440px; margin:0 auto; padding:10px 22px 8px; display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:14px; align-items:center; }
+    .brandline { display:flex; gap:10px; align-items:baseline; min-width:0; }
+    h1 { margin:0; font-size:clamp(20px, 2.8vw, 34px); line-height:.9; letter-spacing:-.065em; text-transform:uppercase; white-space:nowrap; }
+    .dek { color:var(--muted); max-width:none; margin:0; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .stats { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; font-size:11px; line-height:1.2; white-space:nowrap; }
+    .controls { max-width:1440px; margin:0 auto; padding:0 22px 10px; display:grid; grid-template-columns:minmax(220px, 360px) 1fr; gap:10px; }
     input { width:100%; background:#050505; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:12px 15px; outline:none; }
     input:focus { border-color:var(--accent); }
     .filters, .view-tabs, .grid-size { display:flex; flex-wrap:wrap; gap:8px; }
@@ -79,14 +80,14 @@
     .lightbox-close { position:absolute; top:18px; right:18px; font-size:24px; line-height:1; padding:8px 13px; background:#050505; }
     .empty { border:1px dashed var(--line); border-radius:22px; padding:40px; color:var(--muted); }
     .empty h2 { color:var(--ink); }
-    @media (max-width:760px) { .bar, .controls { grid-template-columns:1fr; } .stats { text-align:left; } dl { grid-template-columns:1fr; } }
+    @media (max-width:760px) { .controls { grid-template-columns:1fr; } .dek { display:none; } dl { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <header>
     <div class="bar">
-      <div><h1>Ray<br>Refs</h1><p class="dek">A private are.na-like taste memory: visual references, interfaces, writing, music, objects, and useful weirdness.</p></div>
-      <div class="stats">21 items<br>built 2026-05-14 18:16 UTC</div>
+      <div class="brandline"><h1>Ray Refs</h1><p class="dek">private are.na-like taste memory</p></div>
+      <div class="stats">21 items<br>built 2026-05-14 18:23 UTC</div>
     </div>
     <div class="controls"><input id="q" placeholder="search taste memory…"><div class="filters"><button class="active" data-filter="">all <small>21</small></button><button data-filter="visual.web-ui">visual.web-ui <small>7</small></button><button data-filter="visual.image">visual.image <small>7</small></button><button data-filter="weird.internet">weird.internet <small>2</small></button><button data-filter="visual.brand">visual.brand <small>2</small></button><button data-filter="visual.object">visual.object <small>1</small></button><button data-filter="visual.motion">visual.motion <small>1</small></button><button data-filter="music.audio">music.audio <small>1</small></button></div></div>
   </header>

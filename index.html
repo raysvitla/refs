@@ -37,14 +37,14 @@
     .grid.comfy { columns: 320px; }
     .grid.big { columns: 460px; }
     .card { break-inside: avoid; display:inline-block; width:100%; margin:0 0 16px; background:#050505; border:0; border-radius:2px; overflow:hidden; scroll-margin-top:210px; }
-    .tile { position:relative; min-height:80px; background:#050505; }
+    .tile { position:relative; min-height:80px; background:#050505; cursor:zoom-in; }
     .media { display:block; width:100%; background:#050505; border:0; }
     img.media { cursor:zoom-in; }
     .audio { width:calc(100% - 24px); margin:12px; }
     .id-badge { position:absolute; top:8px; left:8px; z-index:2; opacity:.36; backdrop-filter:blur(8px); box-shadow:0 8px 24px rgba(0,0,0,.28); }
     .card:hover .id-badge, .card:focus-within .id-badge { opacity:1; }
-    .card-info { position:absolute; inset:auto 0 0 0; z-index:1; padding:58px 12px 12px; background:linear-gradient(180deg, transparent, rgba(0,0,0,.46) 20%, rgba(0,0,0,.88)); opacity:0; transform:translateY(8px); transition:opacity .14s ease, transform .14s ease; pointer-events:none; }
-    .card:hover .card-info, .card:focus-within .card-info { opacity:1; transform:none; pointer-events:auto; }
+    .card-info { position:absolute; inset:auto 0 0 0; z-index:1; padding:42px 12px 12px; background:linear-gradient(180deg, transparent, rgba(0,0,0,.42) 32%, rgba(0,0,0,.82)); opacity:0; transform:translateY(6px); transition:opacity .14s ease, transform .14s ease; pointer-events:none; }
+    .card:hover .card-info, .card:focus-within .card-info { opacity:1; transform:none; }
     .meta, .note-kicker { display:flex; flex-wrap:wrap; gap:7px; align-items:center; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
     .ref-code { padding:3px 7px; border-color:var(--accent); color:var(--accent); background:#101400; font-size:11px; letter-spacing:.08em; }
     .ref-code.copied::after { content:' copied'; color:var(--muted); text-transform:lowercase; letter-spacing:0; }
@@ -86,7 +86,7 @@
   <header>
     <div class="bar">
       <div><h1>Ray<br>Refs</h1><p class="dek">A private are.na-like taste memory: visual references, interfaces, writing, music, objects, and useful weirdness.</p></div>
-      <div class="stats">11 items<br>built 2026-05-14 16:59 UTC</div>
+      <div class="stats">11 items<br>built 2026-05-14 17:37 UTC</div>
     </div>
     <div class="controls"><input id="q" placeholder="search taste memory…"><div class="filters"><button class="active" data-filter="">all <small>11</small></button><button data-filter="visual.image">visual.image <small>7</small></button><button data-filter="visual.brand">visual.brand <small>2</small></button><button data-filter="weird.internet">weird.internet <small>1</small></button><button data-filter="music.audio">music.audio <small>1</small></button></div></div>
   </header>
@@ -102,14 +102,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg" data-full="assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg" data-title="Jesu Moratiel — Madrid map torso sculpture" data-ref="R009" data-why="The map is not background — it becomes body topology. Good evidence for geography/data fused with sculpture." data-tags="cgi, cartography, madrid, map-texture, abstract-body, sculpture, digital-render" data-signals="Madrid map stretched over folded torso, black void-like cavities, yellow road rings, soft plastic surface, cartographic labels as skin, body topology" data-source="" alt="Jesu Moratiel — Madrid map torso sculpture" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R009" type="button" title="Copy ref id">R009</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>Jesu Moratiel — Madrid map torso sculpture</h2>
-      <p class="why">The map is not background — it becomes body topology. Good evidence for geography/data fused with sculpture.</p>
-      <p class="notes">Instagram screenshot from welcome.jpeg carousel, credited to Jesu Moratiel / @moratiel_. Slide 6/7; Madrid map over abstract torso form.</p>
-      <div class="signals"><span class="signal">Madrid map stretched over folded torso</span><span class="signal">black void-like cavities</span><span class="signal">yellow road rings</span><span class="signal">soft plastic surface</span><span class="signal">cartographic labels as skin</span><span class="signal">body topology</span></div>
-      <div class="tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="cartography" type="button">#cartography</button><button class="tag" data-tag="madrid" type="button">#madrid</button><button class="tag" data-tag="map-texture" type="button">#map-texture</button><button class="tag" data-tag="abstract-body" type="button">#abstract-body</button><button class="tag" data-tag="sculpture" type="button">#sculpture</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -117,14 +112,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg" data-full="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg" data-title="Jaded London acoustic foam fashion box — pink blue" data-ref="R010" data-why="The set is a sculptural product frame: clinically white, padded, and weird enough to make the candy colors hit harder." data-tags="fashion, editorial, acoustic-foam, jaded-london, color-pop, white-box, carousel, set-design" data-signals="white acoustic foam chamber, hot pink and turquoise styling, compressed square box set, angular crouched pose, product color as signal, padded geometric backdrop" data-source="" alt="Jaded London acoustic foam fashion box — pink blue" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R010" type="button" title="Copy ref id">R010</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.brand</span><span>image</span><span>2026-05-14</span></div>
       <h2>Jaded London acoustic foam fashion box — pink blue</h2>
-      <p class="why">The set is a sculptural product frame: clinically white, padded, and weird enough to make the candy colors hit harder.</p>
-      <p class="notes">Instagram feed screenshot from felicesiemons/felicie style carousel for @jadedldn; slide 11/11.</p>
-      <div class="signals"><span class="signal">white acoustic foam chamber</span><span class="signal">hot pink and turquoise styling</span><span class="signal">compressed square box set</span><span class="signal">angular crouched pose</span><span class="signal">product color as signal</span><span class="signal">padded geometric backdrop</span></div>
-      <div class="tags"><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="editorial" type="button">#editorial</button><button class="tag" data-tag="acoustic-foam" type="button">#acoustic-foam</button><button class="tag" data-tag="jaded-london" type="button">#jaded-london</button><button class="tag" data-tag="color-pop" type="button">#color-pop</button><button class="tag" data-tag="white-box" type="button">#white-box</button><button class="tag" data-tag="carousel" type="button">#carousel</button><button class="tag" data-tag="set-design" type="button">#set-design</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -132,14 +122,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg" data-full="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg" data-title="Jaded London acoustic foam fashion box — neon heels" data-ref="R011" data-why="Same foam-box language, but more body/pose tension: clean white soundproof room plus synthetic sugar-color styling." data-tags="fashion, editorial, acoustic-foam, neon-pink, turquoise, white-box, carousel, set-design" data-signals="white wedge-foam frame, neon pink heels, turquoise lace shorts, direct gaze from awkward pose, soft padded geometry, clean soundproof-room surrealism" data-source="" alt="Jaded London acoustic foam fashion box — neon heels" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R011" type="button" title="Copy ref id">R011</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.brand</span><span>image</span><span>2026-05-14</span></div>
       <h2>Jaded London acoustic foam fashion box — neon heels</h2>
-      <p class="why">Same foam-box language, but more body/pose tension: clean white soundproof room plus synthetic sugar-color styling.</p>
-      <p class="notes">Instagram feed screenshot from felicesiemons/felicie style carousel for @jadedldn; slide 5/11.</p>
-      <div class="signals"><span class="signal">white wedge-foam frame</span><span class="signal">neon pink heels</span><span class="signal">turquoise lace shorts</span><span class="signal">direct gaze from awkward pose</span><span class="signal">soft padded geometry</span><span class="signal">clean soundproof-room surrealism</span></div>
-      <div class="tags"><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="editorial" type="button">#editorial</button><button class="tag" data-tag="acoustic-foam" type="button">#acoustic-foam</button><button class="tag" data-tag="neon-pink" type="button">#neon-pink</button><button class="tag" data-tag="turquoise" type="button">#turquoise</button><button class="tag" data-tag="white-box" type="button">#white-box</button><button class="tag" data-tag="carousel" type="button">#carousel</button><button class="tag" data-tag="set-design" type="button">#set-design</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -147,14 +132,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg" data-full="assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg" data-title="Shag mullet multi-angle haircut reference" data-ref="R002" data-why="Useful as a precise grooming/persona ref: controlled messy hair, slight romantic dirt, and studio-documentation instead of beauty-ad polish." data-tags="portrait, hair, shag-mullet, studio-black, grooming, menswear, reference-sheet" data-signals="six-panel reference sheet, textured shag mullet, black studio void, soft editorial lighting, formal shirt with odd lavender detail, identity-sheet framing" data-source="" alt="Shag mullet multi-angle haircut reference" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R002" type="button" title="Copy ref id">R002</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>Shag mullet multi-angle haircut reference</h2>
-      <p class="why">Useful as a precise grooming/persona ref: controlled messy hair, slight romantic dirt, and studio-documentation instead of beauty-ad polish.</p>
-      <p class="notes">Multi-angle hairstyle and portrait collage against a black background; strong as a haircut/persona reference.</p>
-      <div class="signals"><span class="signal">six-panel reference sheet</span><span class="signal">textured shag mullet</span><span class="signal">black studio void</span><span class="signal">soft editorial lighting</span><span class="signal">formal shirt with odd lavender detail</span><span class="signal">identity-sheet framing</span></div>
-      <div class="tags"><button class="tag" data-tag="portrait" type="button">#portrait</button><button class="tag" data-tag="hair" type="button">#hair</button><button class="tag" data-tag="shag-mullet" type="button">#shag-mullet</button><button class="tag" data-tag="studio-black" type="button">#studio-black</button><button class="tag" data-tag="grooming" type="button">#grooming</button><button class="tag" data-tag="menswear" type="button">#menswear</button><button class="tag" data-tag="reference-sheet" type="button">#reference-sheet</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -162,14 +142,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg" data-full="assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg" data-title="Glass-chrome hair portrait" data-ref="R003" data-why="The uncanny material upgrade does the work: a normal indoor portrait interrupted by impossible transparent hair." data-tags="portrait, surreal-hair, glass, chrome, prismatic, fashion, cgi-touch" data-signals="liquid-glass hair, transparent chrome strands, warm mundane room against impossible material, soft selfie editorial hybrid, looped sculptural hair near ear" data-source="" alt="Glass-chrome hair portrait" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R003" type="button" title="Copy ref id">R003</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>Glass-chrome hair portrait</h2>
-      <p class="why">The uncanny material upgrade does the work: a normal indoor portrait interrupted by impossible transparent hair.</p>
-      <p class="notes">Portrait with reflective glass/chrome hair and prismatic streaks; reality/CGI blur without a full fantasy setting.</p>
-      <div class="signals"><span class="signal">liquid-glass hair</span><span class="signal">transparent chrome strands</span><span class="signal">warm mundane room against impossible material</span><span class="signal">soft selfie editorial hybrid</span><span class="signal">looped sculptural hair near ear</span></div>
-      <div class="tags"><button class="tag" data-tag="portrait" type="button">#portrait</button><button class="tag" data-tag="surreal-hair" type="button">#surreal-hair</button><button class="tag" data-tag="glass" type="button">#glass</button><button class="tag" data-tag="chrome" type="button">#chrome</button><button class="tag" data-tag="prismatic" type="button">#prismatic</button><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="cgi-touch" type="button">#cgi-touch</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -177,14 +152,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg" data-full="assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg" data-title="Hello Kitty Organization XIII meme story" data-ref="R004" data-why="Cursed cute hardness: a tiny mascot wearing apocalyptic seriousness without asking permission." data-tags="meme, hello-kitty, kingdom-hearts, goth-cute, internet-edgelord, low-res, story-screenshot" data-signals="cute mascot in black cult coat, melodramatic gothic sky, lavender-gray story field, compressed 3D meme texture, hard-cute punchline" data-source="" alt="Hello Kitty Organization XIII meme story" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R004" type="button" title="Copy ref id">R004</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>weird.internet</span><span>image</span><span>2026-05-14</span></div>
       <h2>Hello Kitty Organization XIII meme story</h2>
-      <p class="why">Cursed cute hardness: a tiny mascot wearing apocalyptic seriousness without asking permission.</p>
-      <p class="notes">Instagram Story screenshot with the text “Life is hard / but I’m harder”; Hello Kitty staged as a dark fantasy boss.</p>
-      <div class="signals"><span class="signal">cute mascot in black cult coat</span><span class="signal">melodramatic gothic sky</span><span class="signal">lavender-gray story field</span><span class="signal">compressed 3D meme texture</span><span class="signal">hard-cute punchline</span></div>
-      <div class="tags"><button class="tag" data-tag="meme" type="button">#meme</button><button class="tag" data-tag="hello-kitty" type="button">#hello-kitty</button><button class="tag" data-tag="kingdom-hearts" type="button">#kingdom-hearts</button><button class="tag" data-tag="goth-cute" type="button">#goth-cute</button><button class="tag" data-tag="internet-edgelord" type="button">#internet-edgelord</button><button class="tag" data-tag="low-res" type="button">#low-res</button><button class="tag" data-tag="story-screenshot" type="button">#story-screenshot</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -192,14 +162,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png" data-full="assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png" data-title="Slip Logic — stained-glass Spotify tile" data-ref="R005" data-why="A delicate object-art cover living inside clean music UI: ornamental and strange without becoming precious." data-tags="music, spotify, cover-art, stained-glass, mosaic, botanical, metallic, ornamental" data-signals="stained-glass enamel mosaic, silver dividers, dotted selection outline, botanical and star motifs, soft gray app gradient, object-art inside music UI" data-source="" alt="Slip Logic — stained-glass Spotify tile" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R005" type="button" title="Copy ref id">R005</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>music.audio</span><span>image</span><span>2026-05-14</span></div>
       <h2>Slip Logic — stained-glass Spotify tile</h2>
-      <p class="why">A delicate object-art cover living inside clean music UI: ornamental and strange without becoming precious.</p>
-      <p class="notes">Track screenshot: “Slip Logic” by Cousin, Priori. Visual ref as much as music ref.</p>
-      <div class="signals"><span class="signal">stained-glass enamel mosaic</span><span class="signal">silver dividers</span><span class="signal">dotted selection outline</span><span class="signal">botanical and star motifs</span><span class="signal">soft gray app gradient</span><span class="signal">object-art inside music UI</span></div>
-      <div class="tags"><button class="tag" data-tag="music" type="button">#music</button><button class="tag" data-tag="spotify" type="button">#spotify</button><button class="tag" data-tag="cover-art" type="button">#cover-art</button><button class="tag" data-tag="stained-glass" type="button">#stained-glass</button><button class="tag" data-tag="mosaic" type="button">#mosaic</button><button class="tag" data-tag="botanical" type="button">#botanical</button><button class="tag" data-tag="metallic" type="button">#metallic</button><button class="tag" data-tag="ornamental" type="button">#ornamental</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -207,14 +172,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg" data-full="assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg" data-title="Jesu Moratiel — NYC map body render" data-ref="R006" data-why="Strong evidence for UI/data as anatomy: literal navigation skin on a glossy figure, weird but readable." data-tags="cgi, body-map, google-maps, sculpture, cartography, interface-body, digital-render, nyc" data-signals="Google Maps wrapped over torso, city as skin, braided-map hair, pale map palette, body-as-interface, location labels as texture" data-source="" alt="Jesu Moratiel — NYC map body render" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R006" type="button" title="Copy ref id">R006</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>Jesu Moratiel — NYC map body render</h2>
-      <p class="why">Strong evidence for UI/data as anatomy: literal navigation skin on a glossy figure, weird but readable.</p>
-      <p class="notes">Instagram screenshot from welcome.jpeg carousel, credited to digital renders by Jesu Moratiel / @moratiel_. Slide 3/7, New York map texture.</p>
-      <div class="signals"><span class="signal">Google Maps wrapped over torso</span><span class="signal">city as skin</span><span class="signal">braided-map hair</span><span class="signal">pale map palette</span><span class="signal">body-as-interface</span><span class="signal">location labels as texture</span></div>
-      <div class="tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="body-map" type="button">#body-map</button><button class="tag" data-tag="google-maps" type="button">#google-maps</button><button class="tag" data-tag="sculpture" type="button">#sculpture</button><button class="tag" data-tag="cartography" type="button">#cartography</button><button class="tag" data-tag="interface-body" type="button">#interface-body</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button><button class="tag" data-tag="nyc" type="button">#nyc</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -222,14 +182,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg" data-full="assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg" data-title="Jesu Moratiel — Spotify body render" data-ref="R007" data-why="Tech UI becomes flesh/surface, not a screen — useful for cyber-editorial material systems." data-tags="cgi, interface-body, spotify, glossy-black, sculpture, warped-ui, digital-render" data-signals="dark-mode playlist UI bent over black torso, glossy sculptural body, white text warped by anatomy, search bar as body marking, tiny colored app accents" data-source="" alt="Jesu Moratiel — Spotify body render" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R007" type="button" title="Copy ref id">R007</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>Jesu Moratiel — Spotify body render</h2>
-      <p class="why">Tech UI becomes flesh/surface, not a screen — useful for cyber-editorial material systems.</p>
-      <p class="notes">Instagram screenshot from welcome.jpeg carousel, credited to Jesu Moratiel / @moratiel_. Slide 4/7; Spotify-like UI mapped onto a glossy body.</p>
-      <div class="signals"><span class="signal">dark-mode playlist UI bent over black torso</span><span class="signal">glossy sculptural body</span><span class="signal">white text warped by anatomy</span><span class="signal">search bar as body marking</span><span class="signal">tiny colored app accents</span></div>
-      <div class="tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="interface-body" type="button">#interface-body</button><button class="tag" data-tag="spotify" type="button">#spotify</button><button class="tag" data-tag="glossy-black" type="button">#glossy-black</button><button class="tag" data-tag="sculpture" type="button">#sculpture</button><button class="tag" data-tag="warped-ui" type="button">#warped-ui</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -237,14 +192,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg" data-full="assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg" data-title="Jesu Moratiel — gabber pack blue interface body" data-ref="R008" data-why="Feels like club software becoming a body: cold, shiny, dense, and aggressively music-coded." data-tags="cgi, interface-body, gabber, electric-blue, glossy-hair, club-software, digital-render" data-signals="electric-blue playlist panels, glossy black synthetic body, dense micro UI rows, long metallic hair, music taxonomy as clothing, green app-control accents" data-source="" alt="Jesu Moratiel — gabber pack blue interface body" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R008" type="button" title="Copy ref id">R008</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>Jesu Moratiel — gabber pack blue interface body</h2>
-      <p class="why">Feels like club software becoming a body: cold, shiny, dense, and aggressively music-coded.</p>
-      <p class="notes">Instagram screenshot from welcome.jpeg carousel, credited to Jesu Moratiel / @moratiel_. Slide 5/7; “gabber pack” UI skin.</p>
-      <div class="signals"><span class="signal">electric-blue playlist panels</span><span class="signal">glossy black synthetic body</span><span class="signal">dense micro UI rows</span><span class="signal">long metallic hair</span><span class="signal">music taxonomy as clothing</span><span class="signal">green app-control accents</span></div>
-      <div class="tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="interface-body" type="button">#interface-body</button><button class="tag" data-tag="gabber" type="button">#gabber</button><button class="tag" data-tag="electric-blue" type="button">#electric-blue</button><button class="tag" data-tag="glossy-hair" type="button">#glossy-hair</button><button class="tag" data-tag="club-software" type="button">#club-software</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button></div>
-      <div class="links"><a href="assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg" target="_blank">asset</a></div>
     </div>
   </div>
 </article>
@@ -252,14 +202,9 @@
   <div class="tile">
     <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png" data-full="assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png" data-title="The Noise Floor of Revolt — glowing machine schematic" data-ref="R001" data-why="It hits as an evidence shot of a living computational machine: dark field, toxic green glow, dense cable topology, and numeric overlays turning hardware into an almost ritual schematic." data-tags="glowing-machine, neon-green, data-overlay, technical-schematic, cable-topology, holographic, xray-hardware, computational-apparatus, dark" data-signals="luminous green on black, dense symmetrical cable tangle, number labels as technical ritual, x-ray/holographic transparency, lab hardware as occult machine" data-source="https://diffractionscollective.com/2026/04/30/the-noise-floor-of-revolt-harry-halpin/" alt="The Noise Floor of Revolt — glowing machine schematic" loading="lazy">
     <button class="ref-code id-badge" data-copy-ref="R001" type="button" title="Copy ref id">R001</button>
-    <div class="card-info">
+    <div class="card-info" aria-hidden="true">
       <div class="meta"><span>visual.image</span><span>image</span><span>2026-05-14</span></div>
       <h2>The Noise Floor of Revolt — glowing machine schematic</h2>
-      <p class="why">It hits as an evidence shot of a living computational machine: dark field, toxic green glow, dense cable topology, and numeric overlays turning hardware into an almost ritual schematic.</p>
-      <p class="notes">Source article: “The Noise Floor of Revolt” by Harry Halpin on Diffractions Collective.</p>
-      <div class="signals"><span class="signal">luminous green on black</span><span class="signal">dense symmetrical cable tangle</span><span class="signal">number labels as technical ritual</span><span class="signal">x-ray/holographic transparency</span><span class="signal">lab hardware as occult machine</span></div>
-      <div class="tags"><button class="tag" data-tag="glowing-machine" type="button">#glowing-machine</button><button class="tag" data-tag="neon-green" type="button">#neon-green</button><button class="tag" data-tag="data-overlay" type="button">#data-overlay</button><button class="tag" data-tag="technical-schematic" type="button">#technical-schematic</button><button class="tag" data-tag="cable-topology" type="button">#cable-topology</button><button class="tag" data-tag="holographic" type="button">#holographic</button><button class="tag" data-tag="xray-hardware" type="button">#xray-hardware</button><button class="tag" data-tag="computational-apparatus" type="button">#computational-apparatus</button><button class="tag" data-tag="dark" type="button">#dark</button></div>
-      <div class="links"><a href="https://diffractionscollective.com/2026/04/30/the-noise-floor-of-revolt-harry-halpin/" target="_blank" rel="noreferrer">source</a> · <a href="assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png" target="_blank">asset</a></div>
     </div>
   </div>
 </article></div></section>
@@ -506,7 +451,12 @@
       const copyBtn = event.target.closest('[data-copy-ref]');
       if (copyBtn) { event.preventDefault(); copyRef(copyBtn.dataset.copyRef, copyBtn); return; }
       const media = event.target.closest('.js-lightbox-media');
-      if (media) { event.preventDefault(); openLightbox(media); }
+      if (media) { event.preventDefault(); openLightbox(media); return; }
+      const card = event.target.closest('.card');
+      if (card && !event.target.closest('a, button, input, summary')) {
+        const cardMedia = card.querySelector('.js-lightbox-media');
+        if (cardMedia) { event.preventDefault(); openLightbox(cardMedia); }
+      }
     });
     lightbox.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
     lightboxClose.addEventListener('click', closeLightbox);

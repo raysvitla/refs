@@ -80,6 +80,11 @@
     .lightbox-meta p { margin:0; }
     .lightbox-meta b { color:var(--ink); }
     .lightbox-close { position:absolute; top:18px; right:18px; font-size:24px; line-height:1; padding:8px 13px; background:#050505; }
+    .lightbox-nav { position:absolute; top:50%; z-index:2; width:48px; height:64px; transform:translateY(-50%); display:grid; place-items:center; padding:0; border-radius:999px; background:rgba(5,5,5,.72); border-color:rgba(242,242,232,.22); color:var(--ink); font-size:32px; line-height:1; backdrop-filter:blur(10px); opacity:.72; }
+    .lightbox-nav:hover { opacity:1; border-color:var(--accent); color:var(--accent); }
+    .lightbox-nav[disabled] { display:none; }
+    .lightbox-prev { left:18px; }
+    .lightbox-next { right:18px; }
     .empty { border:1px dashed var(--line); border-radius:22px; padding:40px; color:var(--muted); }
     .empty h2 { color:var(--ink); }
     @media (max-width:760px) { .controls { grid-template-columns:1fr; } .dek { display:none; } dl { grid-template-columns:1fr; } }
@@ -89,7 +94,7 @@
   <header>
     <div class="bar">
       <div class="brandline"><h1>Ray Refs</h1><p class="dek">private are.na-like taste memory</p></div>
-      <div class="stats">21 items<br>built 2026-05-14 18:28 UTC</div>
+      <div class="stats">21 items<br>built 2026-05-14 18:49 UTC</div>
     </div>
     <div class="controls"><input id="q" placeholder="search taste memory…"><div class="filters"><button class="active" data-filter="">all <small>21</small></button><button data-filter="visual.web-ui">visual.web-ui <small>7</small></button><button data-filter="visual.image">visual.image <small>7</small></button><button data-filter="weird.internet">weird.internet <small>2</small></button><button data-filter="visual.brand">visual.brand <small>2</small></button><button data-filter="visual.object">visual.object <small>1</small></button><button data-filter="visual.motion">visual.motion <small>1</small></button><button data-filter="music.audio">music.audio <small>1</small></button></div></div>
   </header>
@@ -547,9 +552,11 @@
   </main>
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close enlarged image">×</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Next image">›</button>
     <div class="lightbox-inner">
       <img id="lightboxImg" src="" alt="">
-      <div class="lightbox-caption"><span><button class="ref-code" id="lightboxRef" type="button" title="Copy ref id"></button> <strong id="lightboxTitle"></strong></span><span>click outside / Esc to close</span></div>
+      <div class="lightbox-caption"><span><button class="ref-code" id="lightboxRef" type="button" title="Copy ref id"></button> <strong id="lightboxTitle"></strong></span><span>←/→ switch · Esc close</span></div>
       <div class="lightbox-meta" id="lightboxMeta"></div>
     </div>
   </div>
@@ -566,6 +573,9 @@
     const lightboxRef = document.querySelector('#lightboxRef');
     const lightboxMeta = document.querySelector('#lightboxMeta');
     const lightboxClose = document.querySelector('#lightboxClose');
+    const lightboxPrev = document.querySelector('#lightboxPrev');
+    const lightboxNext = document.querySelector('#lightboxNext');
+    let activeMedia = null;
     let filter = '';
     let tagFilter = '';
     function allSearchables() { return [...document.querySelectorAll('[data-search]')]; }
@@ -604,7 +614,27 @@
       p.appendChild(document.createTextNode(value));
       lightboxMeta.appendChild(p);
     }
+    function visibleLightboxMedia() {
+      const activeView = document.querySelector('.view.active') || document;
+      return [...activeView.querySelectorAll('.js-lightbox-media')].filter(media => {
+        const item = media.closest('[data-search]');
+        return !item || item.style.display !== 'none';
+      });
+    }
+    function updateLightboxNav() {
+      const canSwitch = visibleLightboxMedia().length > 1;
+      lightboxPrev.disabled = !canSwitch;
+      lightboxNext.disabled = !canSwitch;
+    }
+    function switchLightbox(step) {
+      const media = visibleLightboxMedia();
+      if (!activeMedia || media.length < 2) return;
+      const current = media.indexOf(activeMedia);
+      const nextIndex = ((current === -1 ? 0 : current) + step + media.length) % media.length;
+      openLightbox(media[nextIndex]);
+    }
     function openLightbox(img) {
+      activeMedia = img;
       lightboxImg.src = img.dataset.full || img.src;
       lightboxImg.alt = img.alt || '';
       lightboxTitle.textContent = img.dataset.title || img.alt || '';
@@ -630,11 +660,13 @@
       lightbox.classList.add('open');
       lightbox.setAttribute('aria-hidden', 'false');
       document.body.classList.add('lightbox-open');
+      updateLightboxNav();
     }
     function closeLightbox() {
       lightbox.classList.remove('open');
       lightbox.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('lightbox-open');
+      activeMedia = null;
       lightboxImg.src = '';
       lightboxMeta.innerHTML = '';
     }
@@ -673,7 +705,14 @@
     });
     lightbox.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
     lightboxClose.addEventListener('click', closeLightbox);
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeLightbox(); });
+    lightboxPrev.addEventListener('click', event => { event.stopPropagation(); switchLightbox(-1); });
+    lightboxNext.addEventListener('click', event => { event.stopPropagation(); switchLightbox(1); });
+    document.addEventListener('keydown', event => {
+      if (!lightbox.classList.contains('open')) return;
+      if (event.key === 'Escape') { closeLightbox(); return; }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); switchLightbox(-1); return; }
+      if (event.key === 'ArrowRight') { event.preventDefault(); switchLightbox(1); }
+    });
 
     function drawGraph() {
       const svg = document.getElementById('graph');

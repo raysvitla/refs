@@ -68,8 +68,25 @@
     .note .media { max-height:540px; object-fit:contain; border:1px solid var(--line); border-radius:16px; margin:12px 0; }
     dl { display:grid; grid-template-columns:150px 1fr; gap:8px 16px; color:var(--muted); } dt { color:var(--ink); font-weight:700; } dd { margin:0; }
     .graph-shell { border:1px solid var(--line); border-radius:24px; overflow:hidden; background:radial-gradient(circle at center, rgba(215,255,56,.08), transparent 55%), #060606; min-height:640px; position:relative; }
-    #graph { width:100%; height:640px; display:block; }
-    .graph-note { position:absolute; left:18px; bottom:16px; color:var(--muted); max-width:620px; }
+    #graph { width:100%; height:640px; display:block; cursor:grab; touch-action:none; }
+    #graph.dragging { cursor:grabbing; }
+    .graph-link { stroke:#2b2b2b; stroke-opacity:.42; transition:stroke .12s ease, stroke-opacity .12s ease; }
+    .graph-link.active { stroke:var(--accent); stroke-opacity:.78; }
+    .graph-link.dim { stroke-opacity:.08; }
+    .graph-node { cursor:pointer; }
+    .graph-node circle { transition:stroke .12s ease, fill-opacity .12s ease, r .12s ease; }
+    .graph-node text { pointer-events:none; user-select:none; }
+    .graph-node.dim { opacity:.18; }
+    .graph-node.active circle { stroke:var(--accent); stroke-width:2.4; }
+    .graph-preview { position:absolute; top:16px; right:16px; z-index:1; width:min(310px, calc(100% - 32px)); max-height:520px; overflow:hidden; border:1px solid rgba(215,255,56,.35); border-radius:18px; background:rgba(5,5,5,.88); box-shadow:0 20px 80px rgba(0,0,0,.55); backdrop-filter:blur(12px); opacity:0; transform:translateY(-6px); pointer-events:none; transition:opacity .12s ease, transform .12s ease; }
+    .graph-preview.show { opacity:1; transform:none; }
+    .graph-preview img { display:block; width:100%; max-height:260px; object-fit:cover; background:#050505; border-bottom:1px solid var(--line); }
+    .graph-preview-body { padding:12px; display:grid; gap:7px; }
+    .graph-preview-kicker { color:var(--accent); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
+    .graph-preview-title { color:var(--ink); font-weight:800; line-height:1.08; }
+    .graph-preview-copy { color:var(--muted); font-size:12px; }
+    .graph-preview-tags { color:var(--blue); font-size:11px; }
+    .graph-note { position:absolute; left:18px; bottom:16px; color:var(--muted); max-width:720px; pointer-events:none; }
     .lightbox { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:22px; background:rgba(0,0,0,.88); backdrop-filter:blur(12px); }
     .lightbox.open { display:flex; }
     .lightbox-inner { width:min(96vw, 1500px); max-height:94vh; display:grid; grid-template-rows:minmax(0, 1fr) auto auto; gap:12px; }
@@ -94,13 +111,13 @@
   <header>
     <div class="bar">
       <div class="brandline"><h1>Ray Refs</h1><p class="dek">private are.na-like taste memory</p></div>
-      <div class="stats">21 items<br>built 2026-05-14 18:49 UTC</div>
+      <div class="stats">21 items<br>built 2026-05-14 19:00 UTC</div>
     </div>
     <div class="controls"><input id="q" placeholder="search taste memory…"><div class="filters"><button class="active" data-filter="">all <small>21</small></button><button data-filter="visual.web-ui">visual.web-ui <small>7</small></button><button data-filter="visual.image">visual.image <small>7</small></button><button data-filter="weird.internet">weird.internet <small>2</small></button><button data-filter="visual.brand">visual.brand <small>2</small></button><button data-filter="visual.object">visual.object <small>1</small></button><button data-filter="visual.motion">visual.motion <small>1</small></button><button data-filter="music.audio">music.audio <small>1</small></button></div></div>
   </header>
   <main>
     <div class="top">
-      <div class="view-tabs"><button class="active" data-view="gridView">are.na grid</button><button data-view="noteView">Obsidian notes</button><button data-view="graphView">taste graph</button></div>
+      <div class="view-tabs"><button class="active" data-view="gridView">are.na grid</button><button data-view="graphView">taste graph</button></div>
       <div class="grid-size" aria-label="Grid size"><button data-grid-size="compact" type="button">compact</button><button class="active" data-grid-size="comfy" type="button">comfy</button><button data-grid-size="big" type="button">big</button></div>
       <details class="tag-panel"><summary>tag filters</summary><div class="top-tags"><button data-tag="archive-ui" type="button">#archive-ui <small>7</small></button><button data-tag="fashion" type="button">#fashion <small>4</small></button><button data-tag="skeuomorphism" type="button">#skeuomorphism <small>4</small></button><button data-tag="fragment-17b" type="button">#fragment-17b <small>4</small></button><button data-tag="cgi" type="button">#cgi <small>4</small></button><button data-tag="digital-render" type="button">#digital-render <small>4</small></button><button data-tag="sculpture" type="button">#sculpture <small>3</small></button><button data-tag="interface-body" type="button">#interface-body <small>3</small></button><button data-tag="metallic" type="button">#metallic <small>2</small></button><button data-tag="instagram-reel" type="button">#instagram-reel <small>2</small></button><button data-tag="dark-editorial" type="button">#dark-editorial <small>2</small></button><button data-tag="streamgraph" type="button">#streamgraph <small>2</small></button><button data-tag="navigation" type="button">#navigation <small>2</small></button><button data-tag="documents" type="button">#documents <small>2</small></button><button data-tag="blue-panel" type="button">#blue-panel <small>2</small></button><button data-tag="receipt" type="button">#receipt <small>2</small></button><button data-tag="skeuomorphic-navigation" type="button">#skeuomorphic-navigation <small>2</small></button><button data-tag="ios-photos" type="button">#ios-photos <small>2</small></button><button data-tag="mobile-viewing" type="button">#mobile-viewing <small>2</small></button><button data-tag="cartography" type="button">#cartography <small>2</small></button><button data-tag="editorial" type="button">#editorial <small>2</small></button><button data-tag="acoustic-foam" type="button">#acoustic-foam <small>2</small></button><button data-tag="white-box" type="button">#white-box <small>2</small></button><button data-tag="carousel" type="button">#carousel <small>2</small></button><button data-tag="set-design" type="button">#set-design <small>2</small></button><button data-tag="portrait" type="button">#portrait <small>2</small></button><button data-tag="spotify" type="button">#spotify <small>2</small></button><button data-tag="mirror-chainmail" type="button">#mirror-chainmail <small>1</small></button><button data-tag="product-page" type="button">#product-page <small>1</small></button><button data-tag="ecommerce" type="button">#ecommerce <small>1</small></button><button data-tag="silver" type="button">#silver <small>1</small></button><button data-tag="body-crop" type="button">#body-crop <small>1</small></button><button data-tag="sale-ui" type="button">#sale-ui <small>1</small></button><button data-tag="motion" type="button">#motion <small>1</small></button><button data-tag="tracking-effect" type="button">#tracking-effect <small>1</small></button><button data-tag="confetti" type="button">#confetti <small>1</small></button><button data-tag="particles" type="button">#particles <small>1</small></button><button data-tag="editor-ui" type="button">#editor-ui <small>1</small></button><button data-tag="tutorial" type="button">#tutorial <small>1</small></button><button data-tag="benkaluza" type="button">#benkaluza <small>1</small></button><button data-tag="text-overlay" type="button">#text-overlay <small>1</small></button><button data-tag="urban" type="button">#urban <small>1</small></button><button data-tag="surveillance-angle" type="button">#surveillance-angle <small>1</small></button><button data-tag="street" type="button">#street <small>1</small></button><button data-tag="micro-stories" type="button">#micro-stories <small>1</small></button><button data-tag="dark-humor" type="button">#dark-humor <small>1</small></button><button data-tag="social-captioning" type="button">#social-captioning <small>1</small></button><button data-tag="data-visualization" type="button">#data-visualization <small>1</small></button></div></details>
     </div>
@@ -316,239 +333,7 @@
     </div>
   </div>
 </article></div></section>
-    <section id="noteView" class="view"><div class="notes-list">
-<article class="note" data-search="r012 boohoo mirrored chainmail mini skirt product page visual.object fashion mirror-chainmail metallic product-page ecommerce silver body-crop sale-ui small square mirrored plates linked like chainmail tight torso crop on white studio background reflective silver mosaic against clean commerce ui low-hip asymmetric mini skirt with dangling chains sale badge red-orange punctuation a cheap shopping screenshot carrying a strong material ref: mirror-tile clothing, chainmail construction, and shiny hard-body styling inside dead-clean e-commerce ui. portuguese mobile product page for a boohoo reflective mini skirt; useful for mirror-chainmail material and fashion/product ui contrast. dropped by ray into #refs as visual taste evidence." data-collection="visual.object" data-ref-code="R012" data-tags="fashion|mirror-chainmail|metallic|product-page|ecommerce|silver|body-crop|sale-ui">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R012" type="button" title="Copy ref id">R012</button> visual.object / image</div>
-  <h2>Boohoo mirrored chainmail mini skirt product page</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-boohoo-mirrored-chainmail-mini-skirt-product-page.jpeg" data-full="assets/originals/2026/05/20260514-181637-boohoo-mirrored-chainmail-mini-skirt-product-page.jpeg" data-title="Boohoo mirrored chainmail mini skirt product page" data-ref="R012" data-why="A cheap shopping screenshot carrying a strong material ref: mirror-tile clothing, chainmail construction, and shiny hard-body styling inside dead-clean e-commerce UI." data-tags="fashion, mirror-chainmail, metallic, product-page, ecommerce, silver, body-crop, sale-ui" data-signals="small square mirrored plates linked like chainmail, tight torso crop on white studio background, reflective silver mosaic against clean commerce UI, low-hip asymmetric mini skirt with dangling chains, sale badge red-orange punctuation" data-source="" alt="Boohoo mirrored chainmail mini skirt product page" loading="lazy">
-  <p class="why">A cheap shopping screenshot carrying a strong material ref: mirror-tile clothing, chainmail construction, and shiny hard-body styling inside dead-clean e-commerce UI.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>small square mirrored plates linked like chainmail, tight torso crop on white studio background, reflective silver mosaic against clean commerce UI, low-hip asymmetric mini skirt with dangling chains, sale badge red-orange punctuation</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="mirror-chainmail" type="button">#mirror-chainmail</button><button class="tag" data-tag="metallic" type="button">#metallic</button><button class="tag" data-tag="product-page" type="button">#product-page</button><button class="tag" data-tag="ecommerce" type="button">#ecommerce</button><button class="tag" data-tag="silver" type="button">#silver</button><button class="tag" data-tag="body-crop" type="button">#body-crop</button><button class="tag" data-tag="sale-ui" type="button">#sale-ui</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-boohoo-mirrored-chainmail-mini-skirt-product-page.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r013 tracking confetti effect reel with editor panel visual.motion motion tracking-effect confetti particles instagram-reel editor-ui tutorial benkaluza dense multicolor square particles covering a tracked subject dark effect-control panel bleeding in from the left picture-in-picture talking head over the demo color swatch grid and parameter controls as texture social ui stacked over creator-tool ui good motion-language evidence: the effect is messy, tiled, and tool-visible instead of clean vfx polish; the making-of interface becomes part of the image. instagram reel screenshot from benkaluza showing a tracking/confetti effect and the underlying editor controls. dropped by ray into #refs as visual taste evidence." data-collection="visual.motion" data-ref-code="R013" data-tags="motion|tracking-effect|confetti|particles|instagram-reel|editor-ui|tutorial|benkaluza">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R013" type="button" title="Copy ref id">R013</button> visual.motion / image</div>
-  <h2>Tracking confetti effect Reel with editor panel</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-tracking-confetti-effect-reel-with-editor-panel.jpeg" data-full="assets/originals/2026/05/20260514-181637-tracking-confetti-effect-reel-with-editor-panel.jpeg" data-title="Tracking confetti effect Reel with editor panel" data-ref="R013" data-why="Good motion-language evidence: the effect is messy, tiled, and tool-visible instead of clean VFX polish; the making-of interface becomes part of the image." data-tags="motion, tracking-effect, confetti, particles, instagram-reel, editor-ui, tutorial, benkaluza" data-signals="dense multicolor square particles covering a tracked subject, dark effect-control panel bleeding in from the left, picture-in-picture talking head over the demo, color swatch grid and parameter controls as texture, social UI stacked over creator-tool UI" data-source="" alt="Tracking confetti effect Reel with editor panel" loading="lazy">
-  <p class="why">Good motion-language evidence: the effect is messy, tiled, and tool-visible instead of clean VFX polish; the making-of interface becomes part of the image.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>dense multicolor square particles covering a tracked subject, dark effect-control panel bleeding in from the left, picture-in-picture talking head over the demo, color swatch grid and parameter controls as texture, social UI stacked over creator-tool UI</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="motion" type="button">#motion</button><button class="tag" data-tag="tracking-effect" type="button">#tracking-effect</button><button class="tag" data-tag="confetti" type="button">#confetti</button><button class="tag" data-tag="particles" type="button">#particles</button><button class="tag" data-tag="instagram-reel" type="button">#instagram-reel</button><button class="tag" data-tag="editor-ui" type="button">#editor-ui</button><button class="tag" data-tag="tutorial" type="button">#tutorial</button><button class="tag" data-tag="benkaluza" type="button">#benkaluza</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-tracking-confetti-effect-reel-with-editor-panel.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r014 different lives — urban label overlay reel weird.internet instagram-reel text-overlay urban surveillance-angle street micro-stories dark-humor social-captioning overhead intersection as anonymous life-map plain white labels pinned to cars and pedestrians yellow central punchline against muted asphalt serious and stupid private stories mixed together surveillance view turned into narrative annotation it turns a generic city intersection into an evidence board of invisible lives: crude, funny, sad, and strangely human at once. instagram reel screenshot from brad_podray with many labels over cars and pedestrians, centered on “different lives.” dropped by ray into #refs as visual taste evidence." data-collection="weird.internet" data-ref-code="R014" data-tags="instagram-reel|text-overlay|urban|surveillance-angle|street|micro-stories|dark-humor|social-captioning">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R014" type="button" title="Copy ref id">R014</button> weird.internet / image</div>
-  <h2>Different lives — urban label overlay Reel</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-different-lives-urban-label-overlay-reel.jpeg" data-full="assets/originals/2026/05/20260514-181637-different-lives-urban-label-overlay-reel.jpeg" data-title="Different lives — urban label overlay Reel" data-ref="R014" data-why="It turns a generic city intersection into an evidence board of invisible lives: crude, funny, sad, and strangely human at once." data-tags="instagram-reel, text-overlay, urban, surveillance-angle, street, micro-stories, dark-humor, social-captioning" data-signals="overhead intersection as anonymous life-map, plain white labels pinned to cars and pedestrians, yellow central punchline against muted asphalt, serious and stupid private stories mixed together, surveillance view turned into narrative annotation" data-source="" alt="Different lives — urban label overlay Reel" loading="lazy">
-  <p class="why">It turns a generic city intersection into an evidence board of invisible lives: crude, funny, sad, and strangely human at once.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>overhead intersection as anonymous life-map, plain white labels pinned to cars and pedestrians, yellow central punchline against muted asphalt, serious and stupid private stories mixed together, surveillance view turned into narrative annotation</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="instagram-reel" type="button">#instagram-reel</button><button class="tag" data-tag="text-overlay" type="button">#text-overlay</button><button class="tag" data-tag="urban" type="button">#urban</button><button class="tag" data-tag="surveillance-angle" type="button">#surveillance-angle</button><button class="tag" data-tag="street" type="button">#street</button><button class="tag" data-tag="micro-stories" type="button">#micro-stories</button><button class="tag" data-tag="dark-humor" type="button">#dark-humor</button><button class="tag" data-tag="social-captioning" type="button">#social-captioning</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-different-lives-urban-label-overlay-reel.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r015 files archive streamgraph navigation — fragments 15–20 visual.web-ui archive-ui dark-editorial data-visualization streamgraph skeuomorphism navigation fictional-archive files dark museum-like page with serif title stacked colored bands as navigable archival categories labels like lexical interruptions and reverse index deep blue evidence panel with dates and fragments white cursor hovering over an abstract data object a navigation system that feels like an artifact: categorical ui as layered archival topography, not a menu. dark “files” archive interface showing fragments 15–20 as a colorful layered streamgraph/timeline. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R015" data-tags="archive-ui|dark-editorial|data-visualization|streamgraph|skeuomorphism|navigation|fictional-archive|files">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R015" type="button" title="Copy ref id">R015</button> visual.web-ui / image</div>
-  <h2>Files archive streamgraph navigation — Fragments 15–20</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-files-archive-streamgraph-navigation-fragments-15-20.jpeg" data-full="assets/originals/2026/05/20260514-181637-files-archive-streamgraph-navigation-fragments-15-20.jpeg" data-title="Files archive streamgraph navigation — Fragments 15–20" data-ref="R015" data-why="A navigation system that feels like an artifact: categorical UI as layered archival topography, not a menu." data-tags="archive-ui, dark-editorial, data-visualization, streamgraph, skeuomorphism, navigation, fictional-archive, files" data-signals="dark museum-like page with serif title, stacked colored bands as navigable archival categories, labels like Lexical Interruptions and Reverse Index, deep blue evidence panel with dates and fragments, white cursor hovering over an abstract data object" data-source="" alt="Files archive streamgraph navigation — Fragments 15–20" loading="lazy">
-  <p class="why">A navigation system that feels like an artifact: categorical UI as layered archival topography, not a menu.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>dark museum-like page with serif title, stacked colored bands as navigable archival categories, labels like Lexical Interruptions and Reverse Index, deep blue evidence panel with dates and fragments, white cursor hovering over an abstract data object</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="dark-editorial" type="button">#dark-editorial</button><button class="tag" data-tag="data-visualization" type="button">#data-visualization</button><button class="tag" data-tag="streamgraph" type="button">#streamgraph</button><button class="tag" data-tag="skeuomorphism" type="button">#skeuomorphism</button><button class="tag" data-tag="navigation" type="button">#navigation</button><button class="tag" data-tag="fictional-archive" type="button">#fictional-archive</button><button class="tag" data-tag="files" type="button">#files</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-files-archive-streamgraph-navigation-fragments-15-20.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r016 repository of remnants archive collage interface visual.web-ui archive-ui skeuomorphism collage documents library-card dark-editorial museum-interface paper-objects black editorial frame with elegant serif title layered library cards, graph sheet, old photo, and device object bright blue annotation card with yellow download button red close button and visible cursor imply tactile ui real paper ephemera arranged as website navigation this is exactly the good kind of skeuomorphism: not fake leather, but documents as interactive evidence objects in a dark archive system. website/mockup titled “repository of remnants” with layered archival materials, reading-room photo, and tactile ui controls. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R016" data-tags="archive-ui|skeuomorphism|collage|documents|library-card|dark-editorial|museum-interface|paper-objects">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R016" type="button" title="Copy ref id">R016</button> visual.web-ui / image</div>
-  <h2>Repository of Remnants archive collage interface</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-repository-of-remnants-archive-collage-interface.jpeg" data-full="assets/originals/2026/05/20260514-181637-repository-of-remnants-archive-collage-interface.jpeg" data-title="Repository of Remnants archive collage interface" data-ref="R016" data-why="This is exactly the good kind of skeuomorphism: not fake leather, but documents as interactive evidence objects in a dark archive system." data-tags="archive-ui, skeuomorphism, collage, documents, library-card, dark-editorial, museum-interface, paper-objects" data-signals="black editorial frame with elegant serif title, layered library cards, graph sheet, old photo, and device object, bright blue annotation card with yellow download button, red close button and visible cursor imply tactile UI, real paper ephemera arranged as website navigation" data-source="" alt="Repository of Remnants archive collage interface" loading="lazy">
-  <p class="why">This is exactly the good kind of skeuomorphism: not fake leather, but documents as interactive evidence objects in a dark archive system.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>black editorial frame with elegant serif title, layered library cards, graph sheet, old photo, and device object, bright blue annotation card with yellow download button, red close button and visible cursor imply tactile UI, real paper ephemera arranged as website navigation</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="skeuomorphism" type="button">#skeuomorphism</button><button class="tag" data-tag="collage" type="button">#collage</button><button class="tag" data-tag="documents" type="button">#documents</button><button class="tag" data-tag="library-card" type="button">#library-card</button><button class="tag" data-tag="dark-editorial" type="button">#dark-editorial</button><button class="tag" data-tag="museum-interface" type="button">#museum-interface</button><button class="tag" data-tag="paper-objects" type="button">#paper-objects</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-repository-of-remnants-archive-collage-interface.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r017 fragment 17b archival document spread visual.web-ui archive-ui fragment-17b documents blue-panel pink-paper receipt file-tabs skeuomorphic-navigation royal-blue backing panel under paper scans pink excerpt a sheet paired with off-white unverified page torn yellow receipt clipped over the spread vertical red and blue file tabs on the right edge fictional provenance copy in tiny serif type the ui works like a dossier you can touch: saturated flat panels plus paper texture, stamps, tabs, holes, receipts, and uncertainty-coded copy. full dark archive interface for “fragment 17b”, combining paper documents, receipt, file tabs, and metadata. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R017" data-tags="archive-ui|fragment-17b|documents|blue-panel|pink-paper|receipt|file-tabs|skeuomorphic-navigation">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R017" type="button" title="Copy ref id">R017</button> visual.web-ui / image</div>
-  <h2>Fragment 17B archival document spread</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-fragment-17b-archival-document-spread.jpeg" data-full="assets/originals/2026/05/20260514-181637-fragment-17b-archival-document-spread.jpeg" data-title="Fragment 17B archival document spread" data-ref="R017" data-why="The UI works like a dossier you can touch: saturated flat panels plus paper texture, stamps, tabs, holes, receipts, and uncertainty-coded copy." data-tags="archive-ui, fragment-17b, documents, blue-panel, pink-paper, receipt, file-tabs, skeuomorphic-navigation" data-signals="royal-blue backing panel under paper scans, pink Excerpt A sheet paired with off-white Unverified page, torn yellow receipt clipped over the spread, vertical red and blue file tabs on the right edge, fictional provenance copy in tiny serif type" data-source="" alt="Fragment 17B archival document spread" loading="lazy">
-  <p class="why">The UI works like a dossier you can touch: saturated flat panels plus paper texture, stamps, tabs, holes, receipts, and uncertainty-coded copy.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>royal-blue backing panel under paper scans, pink Excerpt A sheet paired with off-white Unverified page, torn yellow receipt clipped over the spread, vertical red and blue file tabs on the right edge, fictional provenance copy in tiny serif type</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="fragment-17b" type="button">#fragment-17b</button><button class="tag" data-tag="documents" type="button">#documents</button><button class="tag" data-tag="blue-panel" type="button">#blue-panel</button><button class="tag" data-tag="pink-paper" type="button">#pink-paper</button><button class="tag" data-tag="receipt" type="button">#receipt</button><button class="tag" data-tag="file-tabs" type="button">#file-tabs</button><button class="tag" data-tag="skeuomorphic-navigation" type="button">#skeuomorphic-navigation</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-fragment-17b-archival-document-spread.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r018 fragment 17b close-crop document viewer visual.web-ui archive-ui fragment-17b document-viewer receipt binder-holes paperclip blue-panel evidence cropped composition focused on receipt and unverified page colored binder holes as ui ornament yellow receipt with paperclip layered over blue field right-edge file tabs as spatial navigation cream paper and tiny marginal code details a tighter material study of the same archive language: paper texture, tab logic, and bureaucratic residue carrying the interaction. closer crop of the fragment 17b document layout with elias varnell receipt, paperclip, and central unverified page. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R018" data-tags="archive-ui|fragment-17b|document-viewer|receipt|binder-holes|paperclip|blue-panel|evidence">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R018" type="button" title="Copy ref id">R018</button> visual.web-ui / image</div>
-  <h2>Fragment 17B close-crop document viewer</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-fragment-17b-close-crop-document-viewer.jpeg" data-full="assets/originals/2026/05/20260514-181637-fragment-17b-close-crop-document-viewer.jpeg" data-title="Fragment 17B close-crop document viewer" data-ref="R018" data-why="A tighter material study of the same archive language: paper texture, tab logic, and bureaucratic residue carrying the interaction." data-tags="archive-ui, fragment-17b, document-viewer, receipt, binder-holes, paperclip, blue-panel, evidence" data-signals="cropped composition focused on receipt and Unverified page, colored binder holes as UI ornament, yellow receipt with paperclip layered over blue field, right-edge file tabs as spatial navigation, cream paper and tiny marginal code details" data-source="" alt="Fragment 17B close-crop document viewer" loading="lazy">
-  <p class="why">A tighter material study of the same archive language: paper texture, tab logic, and bureaucratic residue carrying the interaction.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>cropped composition focused on receipt and Unverified page, colored binder holes as UI ornament, yellow receipt with paperclip layered over blue field, right-edge file tabs as spatial navigation, cream paper and tiny marginal code details</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="fragment-17b" type="button">#fragment-17b</button><button class="tag" data-tag="document-viewer" type="button">#document-viewer</button><button class="tag" data-tag="receipt" type="button">#receipt</button><button class="tag" data-tag="binder-holes" type="button">#binder-holes</button><button class="tag" data-tag="paperclip" type="button">#paperclip</button><button class="tag" data-tag="blue-panel" type="button">#blue-panel</button><button class="tag" data-tag="evidence" type="button">#evidence</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-fragment-17b-close-crop-document-viewer.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r019 ios photos capture of fragment 17b archive ui visual.web-ui ios-photos archive-ui fragment-17b screenshot-of-video white-frame skeuomorphism mobile-viewing dark archival spread floating inside a mostly white ios photos viewer playback controls and filmstrip framing the design artifact document ui compressed into a saved-video object pink and blue archive panels inside clean apple chrome meta-screenshot layer adds collected-reference feel the phone gallery wrapper makes the archive ui feel found and handled, like a captured artifact rather than a polished case-study image. iphone photos screenshot/video frame showing the fragment 17b archive interface with playback controls and thumbnail strip. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R019" data-tags="ios-photos|archive-ui|fragment-17b|screenshot-of-video|white-frame|skeuomorphism|mobile-viewing">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R019" type="button" title="Copy ref id">R019</button> visual.web-ui / image</div>
-  <h2>iOS Photos capture of Fragment 17B archive UI</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragment-17b-archive-ui.jpeg" data-full="assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragment-17b-archive-ui.jpeg" data-title="iOS Photos capture of Fragment 17B archive UI" data-ref="R019" data-why="The phone gallery wrapper makes the archive UI feel found and handled, like a captured artifact rather than a polished case-study image." data-tags="ios-photos, archive-ui, fragment-17b, screenshot-of-video, white-frame, skeuomorphism, mobile-viewing" data-signals="dark archival spread floating inside a mostly white iOS Photos viewer, playback controls and filmstrip framing the design artifact, document UI compressed into a saved-video object, pink and blue archive panels inside clean Apple chrome, meta-screenshot layer adds collected-reference feel" data-source="" alt="iOS Photos capture of Fragment 17B archive UI" loading="lazy">
-  <p class="why">The phone gallery wrapper makes the archive UI feel found and handled, like a captured artifact rather than a polished case-study image.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>dark archival spread floating inside a mostly white iOS Photos viewer, playback controls and filmstrip framing the design artifact, document UI compressed into a saved-video object, pink and blue archive panels inside clean Apple chrome, meta-screenshot layer adds collected-reference feel</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="ios-photos" type="button">#ios-photos</button><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="fragment-17b" type="button">#fragment-17b</button><button class="tag" data-tag="screenshot-of-video" type="button">#screenshot-of-video</button><button class="tag" data-tag="white-frame" type="button">#white-frame</button><button class="tag" data-tag="skeuomorphism" type="button">#skeuomorphism</button><button class="tag" data-tag="mobile-viewing" type="button">#mobile-viewing</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragment-17b-archive-ui.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r020 ios photos capture of fragments 15–20 tab map visual.web-ui ios-photos archive-ui fragments-15-20 tab-map streamgraph mobile-viewing skeuomorphic-navigation colorful archival tab-map viewed through ios photos large white phone ui around a dark website fragment stacked labels like varnell collection and peripheral entry video playback bar turns navigation into captured motion thumbnail strip suggests a reference-harvesting workflow the design already feels like navigation as object; the photos ui adds another layer of collection, capture, and review. iphone photos screenshot/video frame showing the fragments 15–20 archive-navigation graphic. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R020" data-tags="ios-photos|archive-ui|fragments-15-20|tab-map|streamgraph|mobile-viewing|skeuomorphic-navigation">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R020" type="button" title="Copy ref id">R020</button> visual.web-ui / image</div>
-  <h2>iOS Photos capture of Fragments 15–20 tab map</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragments-15-20-tab-map.jpeg" data-full="assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragments-15-20-tab-map.jpeg" data-title="iOS Photos capture of Fragments 15–20 tab map" data-ref="R020" data-why="The design already feels like navigation as object; the Photos UI adds another layer of collection, capture, and review." data-tags="ios-photos, archive-ui, fragments-15-20, tab-map, streamgraph, mobile-viewing, skeuomorphic-navigation" data-signals="colorful archival tab-map viewed through iOS Photos, large white phone UI around a dark website fragment, stacked labels like Varnell Collection and Peripheral Entry, video playback bar turns navigation into captured motion, thumbnail strip suggests a reference-harvesting workflow" data-source="" alt="iOS Photos capture of Fragments 15–20 tab map" loading="lazy">
-  <p class="why">The design already feels like navigation as object; the Photos UI adds another layer of collection, capture, and review.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>colorful archival tab-map viewed through iOS Photos, large white phone UI around a dark website fragment, stacked labels like Varnell Collection and Peripheral Entry, video playback bar turns navigation into captured motion, thumbnail strip suggests a reference-harvesting workflow</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="ios-photos" type="button">#ios-photos</button><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="fragments-15-20" type="button">#fragments-15-20</button><button class="tag" data-tag="tab-map" type="button">#tab-map</button><button class="tag" data-tag="streamgraph" type="button">#streamgraph</button><button class="tag" data-tag="mobile-viewing" type="button">#mobile-viewing</button><button class="tag" data-tag="skeuomorphic-navigation" type="button">#skeuomorphic-navigation</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragments-15-20-tab-map.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r021 threads post praising skeuomorphic archive navigation visual.web-ui threads skeuomorphism archive-ui navigation tubikstudio aureliengmz social-proof fragment-17b white threads chrome framing a dark archival mockup caption explicitly calling it creative navigation and skeuomorphism rounded embedded media with paper tabs and receipt objects engagement ui around a design reference social discovery layer attached to the visual object useful not only as a visual ref but as taste evidence: the interesting part is navigation becoming a physical archival system again. threads screenshot from aureliengmz: “this is the triumphant return of skeuomorphism”, showing a fragment 17b archive ui by/credited to tubikstudio. dropped by ray into #refs as visual taste evidence." data-collection="visual.web-ui" data-ref-code="R021" data-tags="threads|skeuomorphism|archive-ui|navigation|tubikstudio|aureliengmz|social-proof|fragment-17b">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R021" type="button" title="Copy ref id">R021</button> visual.web-ui / image</div>
-  <h2>Threads post praising skeuomorphic archive navigation</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-181637-threads-post-praising-skeuomorphic-archive-navigation.jpeg" data-full="assets/originals/2026/05/20260514-181637-threads-post-praising-skeuomorphic-archive-navigation.jpeg" data-title="Threads post praising skeuomorphic archive navigation" data-ref="R021" data-why="Useful not only as a visual ref but as taste evidence: the interesting part is navigation becoming a physical archival system again." data-tags="threads, skeuomorphism, archive-ui, navigation, tubikstudio, aureliengmz, social-proof, fragment-17b" data-signals="white Threads chrome framing a dark archival mockup, caption explicitly calling it creative navigation and skeuomorphism, rounded embedded media with paper tabs and receipt objects, engagement UI around a design reference, social discovery layer attached to the visual object" data-source="" alt="Threads post praising skeuomorphic archive navigation" loading="lazy">
-  <p class="why">Useful not only as a visual ref but as taste evidence: the interesting part is navigation becoming a physical archival system again.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>white Threads chrome framing a dark archival mockup, caption explicitly calling it creative navigation and skeuomorphism, rounded embedded media with paper tabs and receipt objects, engagement UI around a design reference, social discovery layer attached to the visual object</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="threads" type="button">#threads</button><button class="tag" data-tag="skeuomorphism" type="button">#skeuomorphism</button><button class="tag" data-tag="archive-ui" type="button">#archive-ui</button><button class="tag" data-tag="navigation" type="button">#navigation</button><button class="tag" data-tag="tubikstudio" type="button">#tubikstudio</button><button class="tag" data-tag="aureliengmz" type="button">#aureliengmz</button><button class="tag" data-tag="social-proof" type="button">#social-proof</button><button class="tag" data-tag="fragment-17b" type="button">#fragment-17b</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-181637-threads-post-praising-skeuomorphic-archive-navigation.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r009 jesu moratiel — madrid map torso sculpture visual.image cgi cartography madrid map-texture abstract-body sculpture digital-render madrid map stretched over folded torso black void-like cavities yellow road rings soft plastic surface cartographic labels as skin body topology the map is not background — it becomes body topology. good evidence for geography/data fused with sculpture. instagram screenshot from welcome.jpeg carousel, credited to jesu moratiel / @moratiel_. slide 6/7; madrid map over abstract torso form. dropped by ray into #refs as visual taste evidence." data-collection="visual.image" data-ref-code="R009" data-tags="cgi|cartography|madrid|map-texture|abstract-body|sculpture|digital-render">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R009" type="button" title="Copy ref id">R009</button> visual.image / image</div>
-  <h2>Jesu Moratiel — Madrid map torso sculpture</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg" data-full="assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg" data-title="Jesu Moratiel — Madrid map torso sculpture" data-ref="R009" data-why="The map is not background — it becomes body topology. Good evidence for geography/data fused with sculpture." data-tags="cgi, cartography, madrid, map-texture, abstract-body, sculpture, digital-render" data-signals="Madrid map stretched over folded torso, black void-like cavities, yellow road rings, soft plastic surface, cartographic labels as skin, body topology" data-source="" alt="Jesu Moratiel — Madrid map torso sculpture" loading="lazy">
-  <p class="why">The map is not background — it becomes body topology. Good evidence for geography/data fused with sculpture.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>Madrid map stretched over folded torso, black void-like cavities, yellow road rings, soft plastic surface, cartographic labels as skin, body topology</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="cartography" type="button">#cartography</button><button class="tag" data-tag="madrid" type="button">#madrid</button><button class="tag" data-tag="map-texture" type="button">#map-texture</button><button class="tag" data-tag="abstract-body" type="button">#abstract-body</button><button class="tag" data-tag="sculpture" type="button">#sculpture</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r010 jaded london acoustic foam fashion box — pink blue visual.brand fashion editorial acoustic-foam jaded-london color-pop white-box carousel set-design white acoustic foam chamber hot pink and turquoise styling compressed square box set angular crouched pose product color as signal padded geometric backdrop the set is a sculptural product frame: clinically white, padded, and weird enough to make the candy colors hit harder. instagram feed screenshot from felicesiemons/felicie style carousel for @jadedldn; slide 11/11. dropped by ray into #refs as visual taste evidence." data-collection="visual.brand" data-ref-code="R010" data-tags="fashion|editorial|acoustic-foam|jaded-london|color-pop|white-box|carousel|set-design">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R010" type="button" title="Copy ref id">R010</button> visual.brand / image</div>
-  <h2>Jaded London acoustic foam fashion box — pink blue</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg" data-full="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg" data-title="Jaded London acoustic foam fashion box — pink blue" data-ref="R010" data-why="The set is a sculptural product frame: clinically white, padded, and weird enough to make the candy colors hit harder." data-tags="fashion, editorial, acoustic-foam, jaded-london, color-pop, white-box, carousel, set-design" data-signals="white acoustic foam chamber, hot pink and turquoise styling, compressed square box set, angular crouched pose, product color as signal, padded geometric backdrop" data-source="" alt="Jaded London acoustic foam fashion box — pink blue" loading="lazy">
-  <p class="why">The set is a sculptural product frame: clinically white, padded, and weird enough to make the candy colors hit harder.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>white acoustic foam chamber, hot pink and turquoise styling, compressed square box set, angular crouched pose, product color as signal, padded geometric backdrop</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="editorial" type="button">#editorial</button><button class="tag" data-tag="acoustic-foam" type="button">#acoustic-foam</button><button class="tag" data-tag="jaded-london" type="button">#jaded-london</button><button class="tag" data-tag="color-pop" type="button">#color-pop</button><button class="tag" data-tag="white-box" type="button">#white-box</button><button class="tag" data-tag="carousel" type="button">#carousel</button><button class="tag" data-tag="set-design" type="button">#set-design</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r011 jaded london acoustic foam fashion box — neon heels visual.brand fashion editorial acoustic-foam neon-pink turquoise white-box carousel set-design white wedge-foam frame neon pink heels turquoise lace shorts direct gaze from awkward pose soft padded geometry clean soundproof-room surrealism same foam-box language, but more body/pose tension: clean white soundproof room plus synthetic sugar-color styling. instagram feed screenshot from felicesiemons/felicie style carousel for @jadedldn; slide 5/11. dropped by ray into #refs as visual taste evidence." data-collection="visual.brand" data-ref-code="R011" data-tags="fashion|editorial|acoustic-foam|neon-pink|turquoise|white-box|carousel|set-design">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R011" type="button" title="Copy ref id">R011</button> visual.brand / image</div>
-  <h2>Jaded London acoustic foam fashion box — neon heels</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg" data-full="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg" data-title="Jaded London acoustic foam fashion box — neon heels" data-ref="R011" data-why="Same foam-box language, but more body/pose tension: clean white soundproof room plus synthetic sugar-color styling." data-tags="fashion, editorial, acoustic-foam, neon-pink, turquoise, white-box, carousel, set-design" data-signals="white wedge-foam frame, neon pink heels, turquoise lace shorts, direct gaze from awkward pose, soft padded geometry, clean soundproof-room surrealism" data-source="" alt="Jaded London acoustic foam fashion box — neon heels" loading="lazy">
-  <p class="why">Same foam-box language, but more body/pose tension: clean white soundproof room plus synthetic sugar-color styling.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>white wedge-foam frame, neon pink heels, turquoise lace shorts, direct gaze from awkward pose, soft padded geometry, clean soundproof-room surrealism</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="editorial" type="button">#editorial</button><button class="tag" data-tag="acoustic-foam" type="button">#acoustic-foam</button><button class="tag" data-tag="neon-pink" type="button">#neon-pink</button><button class="tag" data-tag="turquoise" type="button">#turquoise</button><button class="tag" data-tag="white-box" type="button">#white-box</button><button class="tag" data-tag="carousel" type="button">#carousel</button><button class="tag" data-tag="set-design" type="button">#set-design</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r002 shag mullet multi-angle haircut reference visual.image portrait hair shag-mullet studio-black grooming menswear reference-sheet six-panel reference sheet textured shag mullet black studio void soft editorial lighting formal shirt with odd lavender detail identity-sheet framing useful as a precise grooming/persona ref: controlled messy hair, slight romantic dirt, and studio-documentation instead of beauty-ad polish. multi-angle hairstyle and portrait collage against a black background; strong as a haircut/persona reference. dropped by ray into #refs as visual taste evidence." data-collection="visual.image" data-ref-code="R002" data-tags="portrait|hair|shag-mullet|studio-black|grooming|menswear|reference-sheet">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R002" type="button" title="Copy ref id">R002</button> visual.image / image</div>
-  <h2>Shag mullet multi-angle haircut reference</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg" data-full="assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg" data-title="Shag mullet multi-angle haircut reference" data-ref="R002" data-why="Useful as a precise grooming/persona ref: controlled messy hair, slight romantic dirt, and studio-documentation instead of beauty-ad polish." data-tags="portrait, hair, shag-mullet, studio-black, grooming, menswear, reference-sheet" data-signals="six-panel reference sheet, textured shag mullet, black studio void, soft editorial lighting, formal shirt with odd lavender detail, identity-sheet framing" data-source="" alt="Shag mullet multi-angle haircut reference" loading="lazy">
-  <p class="why">Useful as a precise grooming/persona ref: controlled messy hair, slight romantic dirt, and studio-documentation instead of beauty-ad polish.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>six-panel reference sheet, textured shag mullet, black studio void, soft editorial lighting, formal shirt with odd lavender detail, identity-sheet framing</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="portrait" type="button">#portrait</button><button class="tag" data-tag="hair" type="button">#hair</button><button class="tag" data-tag="shag-mullet" type="button">#shag-mullet</button><button class="tag" data-tag="studio-black" type="button">#studio-black</button><button class="tag" data-tag="grooming" type="button">#grooming</button><button class="tag" data-tag="menswear" type="button">#menswear</button><button class="tag" data-tag="reference-sheet" type="button">#reference-sheet</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r003 glass-chrome hair portrait visual.image portrait surreal-hair glass chrome prismatic fashion cgi-touch liquid-glass hair transparent chrome strands warm mundane room against impossible material soft selfie editorial hybrid looped sculptural hair near ear the uncanny material upgrade does the work: a normal indoor portrait interrupted by impossible transparent hair. portrait with reflective glass/chrome hair and prismatic streaks; reality/cgi blur without a full fantasy setting. dropped by ray into #refs as visual taste evidence." data-collection="visual.image" data-ref-code="R003" data-tags="portrait|surreal-hair|glass|chrome|prismatic|fashion|cgi-touch">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R003" type="button" title="Copy ref id">R003</button> visual.image / image</div>
-  <h2>Glass-chrome hair portrait</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg" data-full="assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg" data-title="Glass-chrome hair portrait" data-ref="R003" data-why="The uncanny material upgrade does the work: a normal indoor portrait interrupted by impossible transparent hair." data-tags="portrait, surreal-hair, glass, chrome, prismatic, fashion, cgi-touch" data-signals="liquid-glass hair, transparent chrome strands, warm mundane room against impossible material, soft selfie editorial hybrid, looped sculptural hair near ear" data-source="" alt="Glass-chrome hair portrait" loading="lazy">
-  <p class="why">The uncanny material upgrade does the work: a normal indoor portrait interrupted by impossible transparent hair.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>liquid-glass hair, transparent chrome strands, warm mundane room against impossible material, soft selfie editorial hybrid, looped sculptural hair near ear</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="portrait" type="button">#portrait</button><button class="tag" data-tag="surreal-hair" type="button">#surreal-hair</button><button class="tag" data-tag="glass" type="button">#glass</button><button class="tag" data-tag="chrome" type="button">#chrome</button><button class="tag" data-tag="prismatic" type="button">#prismatic</button><button class="tag" data-tag="fashion" type="button">#fashion</button><button class="tag" data-tag="cgi-touch" type="button">#cgi-touch</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r004 hello kitty organization xiii meme story weird.internet meme hello-kitty kingdom-hearts goth-cute internet-edgelord low-res story-screenshot cute mascot in black cult coat melodramatic gothic sky lavender-gray story field compressed 3d meme texture hard-cute punchline cursed cute hardness: a tiny mascot wearing apocalyptic seriousness without asking permission. instagram story screenshot with the text “life is hard / but i’m harder”; hello kitty staged as a dark fantasy boss. dropped by ray into #refs as visual taste evidence." data-collection="weird.internet" data-ref-code="R004" data-tags="meme|hello-kitty|kingdom-hearts|goth-cute|internet-edgelord|low-res|story-screenshot">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R004" type="button" title="Copy ref id">R004</button> weird.internet / image</div>
-  <h2>Hello Kitty Organization XIII meme story</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg" data-full="assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg" data-title="Hello Kitty Organization XIII meme story" data-ref="R004" data-why="Cursed cute hardness: a tiny mascot wearing apocalyptic seriousness without asking permission." data-tags="meme, hello-kitty, kingdom-hearts, goth-cute, internet-edgelord, low-res, story-screenshot" data-signals="cute mascot in black cult coat, melodramatic gothic sky, lavender-gray story field, compressed 3D meme texture, hard-cute punchline" data-source="" alt="Hello Kitty Organization XIII meme story" loading="lazy">
-  <p class="why">Cursed cute hardness: a tiny mascot wearing apocalyptic seriousness without asking permission.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>cute mascot in black cult coat, melodramatic gothic sky, lavender-gray story field, compressed 3D meme texture, hard-cute punchline</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="meme" type="button">#meme</button><button class="tag" data-tag="hello-kitty" type="button">#hello-kitty</button><button class="tag" data-tag="kingdom-hearts" type="button">#kingdom-hearts</button><button class="tag" data-tag="goth-cute" type="button">#goth-cute</button><button class="tag" data-tag="internet-edgelord" type="button">#internet-edgelord</button><button class="tag" data-tag="low-res" type="button">#low-res</button><button class="tag" data-tag="story-screenshot" type="button">#story-screenshot</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r005 slip logic — stained-glass spotify tile music.audio music spotify cover-art stained-glass mosaic botanical metallic ornamental stained-glass enamel mosaic silver dividers dotted selection outline botanical and star motifs soft gray app gradient object-art inside music ui a delicate object-art cover living inside clean music ui: ornamental and strange without becoming precious. track screenshot: “slip logic” by cousin, priori. visual ref as much as music ref. dropped by ray into #refs as visual taste evidence." data-collection="music.audio" data-ref-code="R005" data-tags="music|spotify|cover-art|stained-glass|mosaic|botanical|metallic|ornamental">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R005" type="button" title="Copy ref id">R005</button> music.audio / image</div>
-  <h2>Slip Logic — stained-glass Spotify tile</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png" data-full="assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png" data-title="Slip Logic — stained-glass Spotify tile" data-ref="R005" data-why="A delicate object-art cover living inside clean music UI: ornamental and strange without becoming precious." data-tags="music, spotify, cover-art, stained-glass, mosaic, botanical, metallic, ornamental" data-signals="stained-glass enamel mosaic, silver dividers, dotted selection outline, botanical and star motifs, soft gray app gradient, object-art inside music UI" data-source="" alt="Slip Logic — stained-glass Spotify tile" loading="lazy">
-  <p class="why">A delicate object-art cover living inside clean music UI: ornamental and strange without becoming precious.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>stained-glass enamel mosaic, silver dividers, dotted selection outline, botanical and star motifs, soft gray app gradient, object-art inside music UI</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="music" type="button">#music</button><button class="tag" data-tag="spotify" type="button">#spotify</button><button class="tag" data-tag="cover-art" type="button">#cover-art</button><button class="tag" data-tag="stained-glass" type="button">#stained-glass</button><button class="tag" data-tag="mosaic" type="button">#mosaic</button><button class="tag" data-tag="botanical" type="button">#botanical</button><button class="tag" data-tag="metallic" type="button">#metallic</button><button class="tag" data-tag="ornamental" type="button">#ornamental</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r006 jesu moratiel — nyc map body render visual.image cgi body-map google-maps sculpture cartography interface-body digital-render nyc google maps wrapped over torso city as skin braided-map hair pale map palette body-as-interface location labels as texture strong evidence for ui/data as anatomy: literal navigation skin on a glossy figure, weird but readable. instagram screenshot from welcome.jpeg carousel, credited to digital renders by jesu moratiel / @moratiel_. slide 3/7, new york map texture. dropped by ray into #refs as visual taste evidence." data-collection="visual.image" data-ref-code="R006" data-tags="cgi|body-map|google-maps|sculpture|cartography|interface-body|digital-render|nyc">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R006" type="button" title="Copy ref id">R006</button> visual.image / image</div>
-  <h2>Jesu Moratiel — NYC map body render</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg" data-full="assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg" data-title="Jesu Moratiel — NYC map body render" data-ref="R006" data-why="Strong evidence for UI/data as anatomy: literal navigation skin on a glossy figure, weird but readable." data-tags="cgi, body-map, google-maps, sculpture, cartography, interface-body, digital-render, nyc" data-signals="Google Maps wrapped over torso, city as skin, braided-map hair, pale map palette, body-as-interface, location labels as texture" data-source="" alt="Jesu Moratiel — NYC map body render" loading="lazy">
-  <p class="why">Strong evidence for UI/data as anatomy: literal navigation skin on a glossy figure, weird but readable.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>Google Maps wrapped over torso, city as skin, braided-map hair, pale map palette, body-as-interface, location labels as texture</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="body-map" type="button">#body-map</button><button class="tag" data-tag="google-maps" type="button">#google-maps</button><button class="tag" data-tag="sculpture" type="button">#sculpture</button><button class="tag" data-tag="cartography" type="button">#cartography</button><button class="tag" data-tag="interface-body" type="button">#interface-body</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button><button class="tag" data-tag="nyc" type="button">#nyc</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r007 jesu moratiel — spotify body render visual.image cgi interface-body spotify glossy-black sculpture warped-ui digital-render dark-mode playlist ui bent over black torso glossy sculptural body white text warped by anatomy search bar as body marking tiny colored app accents tech ui becomes flesh/surface, not a screen — useful for cyber-editorial material systems. instagram screenshot from welcome.jpeg carousel, credited to jesu moratiel / @moratiel_. slide 4/7; spotify-like ui mapped onto a glossy body. dropped by ray into #refs as visual taste evidence." data-collection="visual.image" data-ref-code="R007" data-tags="cgi|interface-body|spotify|glossy-black|sculpture|warped-ui|digital-render">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R007" type="button" title="Copy ref id">R007</button> visual.image / image</div>
-  <h2>Jesu Moratiel — Spotify body render</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg" data-full="assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg" data-title="Jesu Moratiel — Spotify body render" data-ref="R007" data-why="Tech UI becomes flesh/surface, not a screen — useful for cyber-editorial material systems." data-tags="cgi, interface-body, spotify, glossy-black, sculpture, warped-ui, digital-render" data-signals="dark-mode playlist UI bent over black torso, glossy sculptural body, white text warped by anatomy, search bar as body marking, tiny colored app accents" data-source="" alt="Jesu Moratiel — Spotify body render" loading="lazy">
-  <p class="why">Tech UI becomes flesh/surface, not a screen — useful for cyber-editorial material systems.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>dark-mode playlist UI bent over black torso, glossy sculptural body, white text warped by anatomy, search bar as body marking, tiny colored app accents</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="interface-body" type="button">#interface-body</button><button class="tag" data-tag="spotify" type="button">#spotify</button><button class="tag" data-tag="glossy-black" type="button">#glossy-black</button><button class="tag" data-tag="sculpture" type="button">#sculpture</button><button class="tag" data-tag="warped-ui" type="button">#warped-ui</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r008 jesu moratiel — gabber pack blue interface body visual.image cgi interface-body gabber electric-blue glossy-hair club-software digital-render electric-blue playlist panels glossy black synthetic body dense micro ui rows long metallic hair music taxonomy as clothing green app-control accents feels like club software becoming a body: cold, shiny, dense, and aggressively music-coded. instagram screenshot from welcome.jpeg carousel, credited to jesu moratiel / @moratiel_. slide 5/7; “gabber pack” ui skin. dropped by ray into #refs as visual taste evidence." data-collection="visual.image" data-ref-code="R008" data-tags="cgi|interface-body|gabber|electric-blue|glossy-hair|club-software|digital-render">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R008" type="button" title="Copy ref id">R008</button> visual.image / image</div>
-  <h2>Jesu Moratiel — gabber pack blue interface body</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg" data-full="assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg" data-title="Jesu Moratiel — gabber pack blue interface body" data-ref="R008" data-why="Feels like club software becoming a body: cold, shiny, dense, and aggressively music-coded." data-tags="cgi, interface-body, gabber, electric-blue, glossy-hair, club-software, digital-render" data-signals="electric-blue playlist panels, glossy black synthetic body, dense micro UI rows, long metallic hair, music taxonomy as clothing, green app-control accents" data-source="" alt="Jesu Moratiel — gabber pack blue interface body" loading="lazy">
-  <p class="why">Feels like club software becoming a body: cold, shiny, dense, and aggressively music-coded.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>electric-blue playlist panels, glossy black synthetic body, dense micro UI rows, long metallic hair, music taxonomy as clothing, green app-control accents</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="cgi" type="button">#cgi</button><button class="tag" data-tag="interface-body" type="button">#interface-body</button><button class="tag" data-tag="gabber" type="button">#gabber</button><button class="tag" data-tag="electric-blue" type="button">#electric-blue</button><button class="tag" data-tag="glossy-hair" type="button">#glossy-hair</button><button class="tag" data-tag="club-software" type="button">#club-software</button><button class="tag" data-tag="digital-render" type="button">#digital-render</button></div></dd>
-    <dt>Links</dt><dd><a href="assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg" target="_blank">asset</a></dd>
-  </dl>
-</article>
-<article class="note" data-search="r001 the noise floor of revolt — glowing machine schematic visual.image glowing-machine neon-green data-overlay technical-schematic cable-topology holographic xray-hardware computational-apparatus dark luminous green on black dense symmetrical cable tangle number labels as technical ritual x-ray/holographic transparency lab hardware as occult machine it hits as an evidence shot of a living computational machine: dark field, toxic green glow, dense cable topology, and numeric overlays turning hardware into an almost ritual schematic. source article: “the noise floor of revolt” by harry halpin on diffractions collective. ray liked the image and shared the article link." data-collection="visual.image" data-ref-code="R001" data-tags="glowing-machine|neon-green|data-overlay|technical-schematic|cable-topology|holographic|xray-hardware|computational-apparatus|dark">
-  <div class="note-kicker"><button class="ref-code" data-copy-ref="R001" type="button" title="Copy ref id">R001</button> visual.image / image</div>
-  <h2>The Noise Floor of Revolt — glowing machine schematic</h2>
-  <img class="media js-lightbox-media" src="assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png" data-full="assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png" data-title="The Noise Floor of Revolt — glowing machine schematic" data-ref="R001" data-why="It hits as an evidence shot of a living computational machine: dark field, toxic green glow, dense cable topology, and numeric overlays turning hardware into an almost ritual schematic." data-tags="glowing-machine, neon-green, data-overlay, technical-schematic, cable-topology, holographic, xray-hardware, computational-apparatus, dark" data-signals="luminous green on black, dense symmetrical cable tangle, number labels as technical ritual, x-ray/holographic transparency, lab hardware as occult machine" data-source="https://diffractionscollective.com/2026/04/30/the-noise-floor-of-revolt-harry-halpin/" alt="The Noise Floor of Revolt — glowing machine schematic" loading="lazy">
-  <p class="why">It hits as an evidence shot of a living computational machine: dark field, toxic green glow, dense cable topology, and numeric overlays turning hardware into an almost ritual schematic.</p>
-  <dl>
-    <dt>Aesthetic signals</dt><dd>luminous green on black, dense symmetrical cable tangle, number labels as technical ritual, x-ray/holographic transparency, lab hardware as occult machine</dd>
-    <dt>Tags</dt><dd><div class="tags inline-tags"><button class="tag" data-tag="glowing-machine" type="button">#glowing-machine</button><button class="tag" data-tag="neon-green" type="button">#neon-green</button><button class="tag" data-tag="data-overlay" type="button">#data-overlay</button><button class="tag" data-tag="technical-schematic" type="button">#technical-schematic</button><button class="tag" data-tag="cable-topology" type="button">#cable-topology</button><button class="tag" data-tag="holographic" type="button">#holographic</button><button class="tag" data-tag="xray-hardware" type="button">#xray-hardware</button><button class="tag" data-tag="computational-apparatus" type="button">#computational-apparatus</button><button class="tag" data-tag="dark" type="button">#dark</button></div></dd>
-    <dt>Links</dt><dd><a href="https://diffractionscollective.com/2026/04/30/the-noise-floor-of-revolt-harry-halpin/" target="_blank" rel="noreferrer">source</a> · <a href="assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png" target="_blank">asset</a></dd>
-  </dl>
-</article></div></section>
-    <section id="graphView" class="view"><div class="graph-shell"><svg id="graph" role="img" aria-label="Taste graph"></svg><p class="graph-note">Graph view links refs to collections and tags. It is deliberately lightweight: enough to see taste clusters, not another productivity cathedral.</p></div></section>
+    <section id="graphView" class="view"><div class="graph-shell"><svg id="graph" role="img" aria-label="Interactive taste graph"></svg><div id="graphPreview" class="graph-preview" aria-hidden="true"></div><p class="graph-note">Live taste graph: drag nodes, hover for preview, click refs to open. Collection/tag nodes filter the board.</p></div></section>
   </main>
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close enlarged image">×</button>
@@ -560,7 +345,7 @@
       <div class="lightbox-meta" id="lightboxMeta"></div>
     </div>
   </div>
-  <script id="graphData" type="application/json">[{"id": "20260514-181637-boohoo-mirrored-chainmail-mini-skirt-product-page", "ref_code": "R012", "title": "Boohoo mirrored chainmail mini skirt product page", "collection": "visual.object", "tags": ["fashion", "mirror-chainmail", "metallic", "product-page", "ecommerce", "silver", "body-crop", "sale-ui"]}, {"id": "20260514-181637-tracking-confetti-effect-reel-with-editor-panel", "ref_code": "R013", "title": "Tracking confetti effect Reel with editor panel", "collection": "visual.motion", "tags": ["motion", "tracking-effect", "confetti", "particles", "instagram-reel", "editor-ui", "tutorial", "benkaluza"]}, {"id": "20260514-181637-different-lives-urban-label-overlay-reel", "ref_code": "R014", "title": "Different lives — urban label overlay Reel", "collection": "weird.internet", "tags": ["instagram-reel", "text-overlay", "urban", "surveillance-angle", "street", "micro-stories", "dark-humor", "social-captioning"]}, {"id": "20260514-181637-files-archive-streamgraph-navigation-fragments-15-20", "ref_code": "R015", "title": "Files archive streamgraph navigation — Fragments 15–20", "collection": "visual.web-ui", "tags": ["archive-ui", "dark-editorial", "data-visualization", "streamgraph", "skeuomorphism", "navigation", "fictional-archive", "files"]}, {"id": "20260514-181637-repository-of-remnants-archive-collage-interface", "ref_code": "R016", "title": "Repository of Remnants archive collage interface", "collection": "visual.web-ui", "tags": ["archive-ui", "skeuomorphism", "collage", "documents", "library-card", "dark-editorial", "museum-interface", "paper-objects"]}, {"id": "20260514-181637-fragment-17b-archival-document-spread", "ref_code": "R017", "title": "Fragment 17B archival document spread", "collection": "visual.web-ui", "tags": ["archive-ui", "fragment-17b", "documents", "blue-panel", "pink-paper", "receipt", "file-tabs", "skeuomorphic-navigation"]}, {"id": "20260514-181637-fragment-17b-close-crop-document-viewer", "ref_code": "R018", "title": "Fragment 17B close-crop document viewer", "collection": "visual.web-ui", "tags": ["archive-ui", "fragment-17b", "document-viewer", "receipt", "binder-holes", "paperclip", "blue-panel", "evidence"]}, {"id": "20260514-181637-ios-photos-capture-of-fragment-17b-archive-ui", "ref_code": "R019", "title": "iOS Photos capture of Fragment 17B archive UI", "collection": "visual.web-ui", "tags": ["ios-photos", "archive-ui", "fragment-17b", "screenshot-of-video", "white-frame", "skeuomorphism", "mobile-viewing"]}, {"id": "20260514-181637-ios-photos-capture-of-fragments-15-20-tab-map", "ref_code": "R020", "title": "iOS Photos capture of Fragments 15–20 tab map", "collection": "visual.web-ui", "tags": ["ios-photos", "archive-ui", "fragments-15-20", "tab-map", "streamgraph", "mobile-viewing", "skeuomorphic-navigation"]}, {"id": "20260514-181637-threads-post-praising-skeuomorphic-archive-navigation", "ref_code": "R021", "title": "Threads post praising skeuomorphic archive navigation", "collection": "visual.web-ui", "tags": ["threads", "skeuomorphism", "archive-ui", "navigation", "tubikstudio", "aureliengmz", "social-proof", "fragment-17b"]}, {"id": "20260514-163848-jesu-moratiel-madrid-map-torso-sculpture", "ref_code": "R009", "title": "Jesu Moratiel — Madrid map torso sculpture", "collection": "visual.image", "tags": ["cgi", "cartography", "madrid", "map-texture", "abstract-body", "sculpture", "digital-render"]}, {"id": "20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue", "ref_code": "R010", "title": "Jaded London acoustic foam fashion box — pink blue", "collection": "visual.brand", "tags": ["fashion", "editorial", "acoustic-foam", "jaded-london", "color-pop", "white-box", "carousel", "set-design"]}, {"id": "20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels", "ref_code": "R011", "title": "Jaded London acoustic foam fashion box — neon heels", "collection": "visual.brand", "tags": ["fashion", "editorial", "acoustic-foam", "neon-pink", "turquoise", "white-box", "carousel", "set-design"]}, {"id": "20260514-163847-shag-mullet-multi-angle-haircut-reference", "ref_code": "R002", "title": "Shag mullet multi-angle haircut reference", "collection": "visual.image", "tags": ["portrait", "hair", "shag-mullet", "studio-black", "grooming", "menswear", "reference-sheet"]}, {"id": "20260514-163847-glass-chrome-hair-portrait", "ref_code": "R003", "title": "Glass-chrome hair portrait", "collection": "visual.image", "tags": ["portrait", "surreal-hair", "glass", "chrome", "prismatic", "fashion", "cgi-touch"]}, {"id": "20260514-163847-hello-kitty-organization-xiii-meme-story", "ref_code": "R004", "title": "Hello Kitty Organization XIII meme story", "collection": "weird.internet", "tags": ["meme", "hello-kitty", "kingdom-hearts", "goth-cute", "internet-edgelord", "low-res", "story-screenshot"]}, {"id": "20260514-163847-slip-logic-stained-glass-spotify-tile", "ref_code": "R005", "title": "Slip Logic — stained-glass Spotify tile", "collection": "music.audio", "tags": ["music", "spotify", "cover-art", "stained-glass", "mosaic", "botanical", "metallic", "ornamental"]}, {"id": "20260514-163847-jesu-moratiel-nyc-map-body-render", "ref_code": "R006", "title": "Jesu Moratiel — NYC map body render", "collection": "visual.image", "tags": ["cgi", "body-map", "google-maps", "sculpture", "cartography", "interface-body", "digital-render", "nyc"]}, {"id": "20260514-163847-jesu-moratiel-spotify-body-render", "ref_code": "R007", "title": "Jesu Moratiel — Spotify body render", "collection": "visual.image", "tags": ["cgi", "interface-body", "spotify", "glossy-black", "sculpture", "warped-ui", "digital-render"]}, {"id": "20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body", "ref_code": "R008", "title": "Jesu Moratiel — gabber pack blue interface body", "collection": "visual.image", "tags": ["cgi", "interface-body", "gabber", "electric-blue", "glossy-hair", "club-software", "digital-render"]}, {"id": "20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic", "ref_code": "R001", "title": "The Noise Floor of Revolt — glowing machine schematic", "collection": "visual.image", "tags": ["glowing-machine", "neon-green", "data-overlay", "technical-schematic", "cable-topology", "holographic", "xray-hardware", "computational-apparatus", "dark"]}]</script>
+  <script id="graphData" type="application/json">[{"id": "20260514-181637-boohoo-mirrored-chainmail-mini-skirt-product-page", "ref_code": "R012", "title": "Boohoo mirrored chainmail mini skirt product page", "collection": "visual.object", "tags": ["fashion", "mirror-chainmail", "metallic", "product-page", "ecommerce", "silver", "body-crop", "sale-ui"], "signals": ["small square mirrored plates linked like chainmail", "tight torso crop on white studio background", "reflective silver mosaic against clean commerce UI", "low-hip asymmetric mini skirt with dangling chains", "sale badge red-orange punctuation"], "why": "A cheap shopping screenshot carrying a strong material ref: mirror-tile clothing, chainmail construction, and shiny hard-body styling inside dead-clean e-commerce UI.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-boohoo-mirrored-chainmail-mini-skirt-product-page.jpeg", "source": ""}, {"id": "20260514-181637-tracking-confetti-effect-reel-with-editor-panel", "ref_code": "R013", "title": "Tracking confetti effect Reel with editor panel", "collection": "visual.motion", "tags": ["motion", "tracking-effect", "confetti", "particles", "instagram-reel", "editor-ui", "tutorial", "benkaluza"], "signals": ["dense multicolor square particles covering a tracked subject", "dark effect-control panel bleeding in from the left", "picture-in-picture talking head over the demo", "color swatch grid and parameter controls as texture", "social UI stacked over creator-tool UI"], "why": "Good motion-language evidence: the effect is messy, tiled, and tool-visible instead of clean VFX polish; the making-of interface becomes part of the image.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-tracking-confetti-effect-reel-with-editor-panel.jpeg", "source": ""}, {"id": "20260514-181637-different-lives-urban-label-overlay-reel", "ref_code": "R014", "title": "Different lives — urban label overlay Reel", "collection": "weird.internet", "tags": ["instagram-reel", "text-overlay", "urban", "surveillance-angle", "street", "micro-stories", "dark-humor", "social-captioning"], "signals": ["overhead intersection as anonymous life-map", "plain white labels pinned to cars and pedestrians", "yellow central punchline against muted asphalt", "serious and stupid private stories mixed together", "surveillance view turned into narrative annotation"], "why": "It turns a generic city intersection into an evidence board of invisible lives: crude, funny, sad, and strangely human at once.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-different-lives-urban-label-overlay-reel.jpeg", "source": ""}, {"id": "20260514-181637-files-archive-streamgraph-navigation-fragments-15-20", "ref_code": "R015", "title": "Files archive streamgraph navigation — Fragments 15–20", "collection": "visual.web-ui", "tags": ["archive-ui", "dark-editorial", "data-visualization", "streamgraph", "skeuomorphism", "navigation", "fictional-archive", "files"], "signals": ["dark museum-like page with serif title", "stacked colored bands as navigable archival categories", "labels like Lexical Interruptions and Reverse Index", "deep blue evidence panel with dates and fragments", "white cursor hovering over an abstract data object"], "why": "A navigation system that feels like an artifact: categorical UI as layered archival topography, not a menu.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-files-archive-streamgraph-navigation-fragments-15-20.jpeg", "source": ""}, {"id": "20260514-181637-repository-of-remnants-archive-collage-interface", "ref_code": "R016", "title": "Repository of Remnants archive collage interface", "collection": "visual.web-ui", "tags": ["archive-ui", "skeuomorphism", "collage", "documents", "library-card", "dark-editorial", "museum-interface", "paper-objects"], "signals": ["black editorial frame with elegant serif title", "layered library cards, graph sheet, old photo, and device object", "bright blue annotation card with yellow download button", "red close button and visible cursor imply tactile UI", "real paper ephemera arranged as website navigation"], "why": "This is exactly the good kind of skeuomorphism: not fake leather, but documents as interactive evidence objects in a dark archive system.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-repository-of-remnants-archive-collage-interface.jpeg", "source": ""}, {"id": "20260514-181637-fragment-17b-archival-document-spread", "ref_code": "R017", "title": "Fragment 17B archival document spread", "collection": "visual.web-ui", "tags": ["archive-ui", "fragment-17b", "documents", "blue-panel", "pink-paper", "receipt", "file-tabs", "skeuomorphic-navigation"], "signals": ["royal-blue backing panel under paper scans", "pink Excerpt A sheet paired with off-white Unverified page", "torn yellow receipt clipped over the spread", "vertical red and blue file tabs on the right edge", "fictional provenance copy in tiny serif type"], "why": "The UI works like a dossier you can touch: saturated flat panels plus paper texture, stamps, tabs, holes, receipts, and uncertainty-coded copy.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-fragment-17b-archival-document-spread.jpeg", "source": ""}, {"id": "20260514-181637-fragment-17b-close-crop-document-viewer", "ref_code": "R018", "title": "Fragment 17B close-crop document viewer", "collection": "visual.web-ui", "tags": ["archive-ui", "fragment-17b", "document-viewer", "receipt", "binder-holes", "paperclip", "blue-panel", "evidence"], "signals": ["cropped composition focused on receipt and Unverified page", "colored binder holes as UI ornament", "yellow receipt with paperclip layered over blue field", "right-edge file tabs as spatial navigation", "cream paper and tiny marginal code details"], "why": "A tighter material study of the same archive language: paper texture, tab logic, and bureaucratic residue carrying the interaction.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-fragment-17b-close-crop-document-viewer.jpeg", "source": ""}, {"id": "20260514-181637-ios-photos-capture-of-fragment-17b-archive-ui", "ref_code": "R019", "title": "iOS Photos capture of Fragment 17B archive UI", "collection": "visual.web-ui", "tags": ["ios-photos", "archive-ui", "fragment-17b", "screenshot-of-video", "white-frame", "skeuomorphism", "mobile-viewing"], "signals": ["dark archival spread floating inside a mostly white iOS Photos viewer", "playback controls and filmstrip framing the design artifact", "document UI compressed into a saved-video object", "pink and blue archive panels inside clean Apple chrome", "meta-screenshot layer adds collected-reference feel"], "why": "The phone gallery wrapper makes the archive UI feel found and handled, like a captured artifact rather than a polished case-study image.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragment-17b-archive-ui.jpeg", "source": ""}, {"id": "20260514-181637-ios-photos-capture-of-fragments-15-20-tab-map", "ref_code": "R020", "title": "iOS Photos capture of Fragments 15–20 tab map", "collection": "visual.web-ui", "tags": ["ios-photos", "archive-ui", "fragments-15-20", "tab-map", "streamgraph", "mobile-viewing", "skeuomorphic-navigation"], "signals": ["colorful archival tab-map viewed through iOS Photos", "large white phone UI around a dark website fragment", "stacked labels like Varnell Collection and Peripheral Entry", "video playback bar turns navigation into captured motion", "thumbnail strip suggests a reference-harvesting workflow"], "why": "The design already feels like navigation as object; the Photos UI adds another layer of collection, capture, and review.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-ios-photos-capture-of-fragments-15-20-tab-map.jpeg", "source": ""}, {"id": "20260514-181637-threads-post-praising-skeuomorphic-archive-navigation", "ref_code": "R021", "title": "Threads post praising skeuomorphic archive navigation", "collection": "visual.web-ui", "tags": ["threads", "skeuomorphism", "archive-ui", "navigation", "tubikstudio", "aureliengmz", "social-proof", "fragment-17b"], "signals": ["white Threads chrome framing a dark archival mockup", "caption explicitly calling it creative navigation and skeuomorphism", "rounded embedded media with paper tabs and receipt objects", "engagement UI around a design reference", "social discovery layer attached to the visual object"], "why": "Useful not only as a visual ref but as taste evidence: the interesting part is navigation becoming a physical archival system again.", "type": "image", "src": "assets/originals/2026/05/20260514-181637-threads-post-praising-skeuomorphic-archive-navigation.jpeg", "source": ""}, {"id": "20260514-163848-jesu-moratiel-madrid-map-torso-sculpture", "ref_code": "R009", "title": "Jesu Moratiel — Madrid map torso sculpture", "collection": "visual.image", "tags": ["cgi", "cartography", "madrid", "map-texture", "abstract-body", "sculpture", "digital-render"], "signals": ["Madrid map stretched over folded torso", "black void-like cavities", "yellow road rings", "soft plastic surface", "cartographic labels as skin", "body topology"], "why": "The map is not background — it becomes body topology. Good evidence for geography/data fused with sculpture.", "type": "image", "src": "assets/originals/2026/05/20260514-163848-jesu-moratiel-madrid-map-torso-sculpture.jpeg", "source": ""}, {"id": "20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue", "ref_code": "R010", "title": "Jaded London acoustic foam fashion box — pink blue", "collection": "visual.brand", "tags": ["fashion", "editorial", "acoustic-foam", "jaded-london", "color-pop", "white-box", "carousel", "set-design"], "signals": ["white acoustic foam chamber", "hot pink and turquoise styling", "compressed square box set", "angular crouched pose", "product color as signal", "padded geometric backdrop"], "why": "The set is a sculptural product frame: clinically white, padded, and weird enough to make the candy colors hit harder.", "type": "image", "src": "assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-pink-blue.jpeg", "source": ""}, {"id": "20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels", "ref_code": "R011", "title": "Jaded London acoustic foam fashion box — neon heels", "collection": "visual.brand", "tags": ["fashion", "editorial", "acoustic-foam", "neon-pink", "turquoise", "white-box", "carousel", "set-design"], "signals": ["white wedge-foam frame", "neon pink heels", "turquoise lace shorts", "direct gaze from awkward pose", "soft padded geometry", "clean soundproof-room surrealism"], "why": "Same foam-box language, but more body/pose tension: clean white soundproof room plus synthetic sugar-color styling.", "type": "image", "src": "assets/originals/2026/05/20260514-163848-jaded-london-acoustic-foam-fashion-box-neon-heels.jpeg", "source": ""}, {"id": "20260514-163847-shag-mullet-multi-angle-haircut-reference", "ref_code": "R002", "title": "Shag mullet multi-angle haircut reference", "collection": "visual.image", "tags": ["portrait", "hair", "shag-mullet", "studio-black", "grooming", "menswear", "reference-sheet"], "signals": ["six-panel reference sheet", "textured shag mullet", "black studio void", "soft editorial lighting", "formal shirt with odd lavender detail", "identity-sheet framing"], "why": "Useful as a precise grooming/persona ref: controlled messy hair, slight romantic dirt, and studio-documentation instead of beauty-ad polish.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-shag-mullet-multi-angle-haircut-reference.jpeg", "source": ""}, {"id": "20260514-163847-glass-chrome-hair-portrait", "ref_code": "R003", "title": "Glass-chrome hair portrait", "collection": "visual.image", "tags": ["portrait", "surreal-hair", "glass", "chrome", "prismatic", "fashion", "cgi-touch"], "signals": ["liquid-glass hair", "transparent chrome strands", "warm mundane room against impossible material", "soft selfie editorial hybrid", "looped sculptural hair near ear"], "why": "The uncanny material upgrade does the work: a normal indoor portrait interrupted by impossible transparent hair.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-glass-chrome-hair-portrait.jpeg", "source": ""}, {"id": "20260514-163847-hello-kitty-organization-xiii-meme-story", "ref_code": "R004", "title": "Hello Kitty Organization XIII meme story", "collection": "weird.internet", "tags": ["meme", "hello-kitty", "kingdom-hearts", "goth-cute", "internet-edgelord", "low-res", "story-screenshot"], "signals": ["cute mascot in black cult coat", "melodramatic gothic sky", "lavender-gray story field", "compressed 3D meme texture", "hard-cute punchline"], "why": "Cursed cute hardness: a tiny mascot wearing apocalyptic seriousness without asking permission.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-hello-kitty-organization-xiii-meme-story.jpeg", "source": ""}, {"id": "20260514-163847-slip-logic-stained-glass-spotify-tile", "ref_code": "R005", "title": "Slip Logic — stained-glass Spotify tile", "collection": "music.audio", "tags": ["music", "spotify", "cover-art", "stained-glass", "mosaic", "botanical", "metallic", "ornamental"], "signals": ["stained-glass enamel mosaic", "silver dividers", "dotted selection outline", "botanical and star motifs", "soft gray app gradient", "object-art inside music UI"], "why": "A delicate object-art cover living inside clean music UI: ornamental and strange without becoming precious.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-slip-logic-stained-glass-spotify-tile.png", "source": ""}, {"id": "20260514-163847-jesu-moratiel-nyc-map-body-render", "ref_code": "R006", "title": "Jesu Moratiel — NYC map body render", "collection": "visual.image", "tags": ["cgi", "body-map", "google-maps", "sculpture", "cartography", "interface-body", "digital-render", "nyc"], "signals": ["Google Maps wrapped over torso", "city as skin", "braided-map hair", "pale map palette", "body-as-interface", "location labels as texture"], "why": "Strong evidence for UI/data as anatomy: literal navigation skin on a glossy figure, weird but readable.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-jesu-moratiel-nyc-map-body-render.jpeg", "source": ""}, {"id": "20260514-163847-jesu-moratiel-spotify-body-render", "ref_code": "R007", "title": "Jesu Moratiel — Spotify body render", "collection": "visual.image", "tags": ["cgi", "interface-body", "spotify", "glossy-black", "sculpture", "warped-ui", "digital-render"], "signals": ["dark-mode playlist UI bent over black torso", "glossy sculptural body", "white text warped by anatomy", "search bar as body marking", "tiny colored app accents"], "why": "Tech UI becomes flesh/surface, not a screen — useful for cyber-editorial material systems.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-jesu-moratiel-spotify-body-render.jpeg", "source": ""}, {"id": "20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body", "ref_code": "R008", "title": "Jesu Moratiel — gabber pack blue interface body", "collection": "visual.image", "tags": ["cgi", "interface-body", "gabber", "electric-blue", "glossy-hair", "club-software", "digital-render"], "signals": ["electric-blue playlist panels", "glossy black synthetic body", "dense micro UI rows", "long metallic hair", "music taxonomy as clothing", "green app-control accents"], "why": "Feels like club software becoming a body: cold, shiny, dense, and aggressively music-coded.", "type": "image", "src": "assets/originals/2026/05/20260514-163847-jesu-moratiel-gabber-pack-blue-interface-body.jpeg", "source": ""}, {"id": "20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic", "ref_code": "R001", "title": "The Noise Floor of Revolt — glowing machine schematic", "collection": "visual.image", "tags": ["glowing-machine", "neon-green", "data-overlay", "technical-schematic", "cable-topology", "holographic", "xray-hardware", "computational-apparatus", "dark"], "signals": ["luminous green on black", "dense symmetrical cable tangle", "number labels as technical ritual", "x-ray/holographic transparency", "lab hardware as occult machine"], "why": "It hits as an evidence shot of a living computational machine: dark field, toxic green glow, dense cable topology, and numeric overlays turning hardware into an almost ritual schematic.", "type": "image", "src": "assets/originals/2026/05/20260514-152615-the-noise-floor-of-revolt-glowing-machine-schematic.png", "source": "https://diffractionscollective.com/2026/04/30/the-noise-floor-of-revolt-harry-halpin/"}]</script>
   <script>
     const q = document.querySelector('#q');
     const filterButtons = [...document.querySelectorAll('button[data-filter]')];
@@ -588,6 +373,7 @@
         const okSearch = !term || card.dataset.search.includes(term);
         card.style.display = okFilter && okTag && okSearch ? '' : 'none';
       });
+      if (document.getElementById('graphView').classList.contains('active')) drawGraph();
     }
     function syncTagButtons() {
       document.querySelectorAll('[data-tag]').forEach(btn => btn.classList.toggle('active', btn.dataset.tag === tagFilter));
@@ -714,28 +500,266 @@
       if (event.key === 'ArrowRight') { event.preventDefault(); switchLightbox(1); }
     });
 
+    let graphFrame = 0;
+    function safeGraphText(value) {
+      return String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+    function graphLabel(value, limit) {
+      const text = String(value || '');
+      return text.length > limit ? text.slice(0, Math.max(1, limit - 1)) + '…' : text;
+    }
+    function graphMatches(item) {
+      const term = q.value.trim().toLowerCase();
+      const haystack = [item.ref_code, item.title, item.collection, (item.tags || []).join(' '), (item.signals || []).join(' '), item.why].join(' ').toLowerCase();
+      return (!filter || item.collection === filter) && (!tagFilter || (item.tags || []).includes(tagFilter)) && (!term || haystack.includes(term));
+    }
+    function setCollectionFilter(value) {
+      filter = filter === value ? '' : value;
+      filterButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.filter === filter));
+      apply();
+    }
+    function openGraphItem(item) {
+      const media = [...document.querySelectorAll('.js-lightbox-media')].find(el => el.dataset.ref === item.ref_code);
+      if (media) { openLightbox(media); return; }
+      if (item.source) window.open(item.source, '_blank', 'noreferrer');
+    }
     function drawGraph() {
       const svg = document.getElementById('graph');
-      const items = JSON.parse(document.getElementById('graphData').textContent || '[]');
-      const w = svg.clientWidth || 1200, h = svg.clientHeight || 640;
+      const preview = document.getElementById('graphPreview');
+      if (!svg || !preview) return;
+      if (graphFrame) cancelAnimationFrame(graphFrame);
+      const rawItems = JSON.parse(document.getElementById('graphData').textContent || '[]');
+      const items = rawItems.filter(graphMatches);
+      const width = svg.clientWidth || 1200;
+      const height = svg.clientHeight || 640;
+      const centerX = width / 2;
+      const centerY = height / 2;
       svg.innerHTML = '';
+      preview.classList.remove('show');
+      preview.setAttribute('aria-hidden', 'true');
       const ns = 'http://www.w3.org/2000/svg';
-      const add = (name, attrs, parent = svg) => { const el = document.createElementNS(ns, name); for (const [k,v] of Object.entries(attrs)) el.setAttribute(k, v); parent.appendChild(el); return el; };
-      const center = { id:'Ray taste', type:'center', x:w/2, y:h/2, r:42, label:'Ray taste' };
-      const collections = [...new Set(items.map(i => i.collection || 'inbox'))];
-      const collectionNodes = collections.map((c, i) => ({ id:c, type:'collection', label:c, x:w/2 + Math.cos(i/Math.max(1,collections.length)*Math.PI*2)*Math.min(w,h)*0.22, y:h/2 + Math.sin(i/Math.max(1,collections.length)*Math.PI*2)*Math.min(w,h)*0.22, r:24 }));
-      const itemNodes = items.map((it, i) => ({ id:it.id, type:'item', label:(it.ref_code ? it.ref_code + ' · ' : '') + it.title, collection:it.collection || 'inbox', x:w/2 + Math.cos(i/Math.max(1,items.length)*Math.PI*2 + .4)*Math.min(w,h)*0.38, y:h/2 + Math.sin(i/Math.max(1,items.length)*Math.PI*2 + .4)*Math.min(w,h)*0.38, r:14 }));
-      const nodes = [center, ...collectionNodes, ...itemNodes];
-      const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
-      for (const c of collectionNodes) { add('line', {x1:center.x,y1:center.y,x2:c.x,y2:c.y,stroke:'#d7ff38','stroke-opacity':.22,'stroke-width':1.4}); }
-      for (const it of itemNodes) { const c = byId[it.collection]; if (c) add('line', {x1:c.x,y1:c.y,x2:it.x,y2:it.y,stroke:'#76d7ff','stroke-opacity':.28,'stroke-width':1}); }
-      for (const n of nodes) {
-        const fill = n.type === 'center' ? '#d7ff38' : n.type === 'collection' ? '#111' : '#76d7ff';
-        const stroke = n.type === 'item' ? '#76d7ff' : '#d7ff38';
-        add('circle', {cx:n.x, cy:n.y, r:n.r, fill, stroke, 'stroke-width':1.5, 'fill-opacity': n.type === 'collection' ? .18 : .9});
-        const t = add('text', {x:n.x, y:n.y + n.r + 15, 'text-anchor':'middle', fill:n.type === 'item' ? '#f2f2e8' : '#d7ff38', 'font-size': n.type === 'item' ? 11 : 12});
-        t.textContent = n.label.length > 34 ? n.label.slice(0, 32) + '…' : n.label;
+      const add = (name, attrs, parent = svg) => {
+        const el = document.createElementNS(ns, name);
+        for (const key in attrs) el.setAttribute(key, attrs[key]);
+        parent.appendChild(el);
+        return el;
+      };
+      if (!items.length) {
+        const text = add('text', {x:centerX, y:centerY, fill:'#8d8d84', 'text-anchor':'middle', 'font-size':16});
+        text.textContent = 'No refs match the current filters.';
+        return;
       }
+
+      const nodes = [];
+      const links = [];
+      const byId = new Map();
+      function addNode(node) {
+        nodes.push(node);
+        byId.set(node.id, node);
+        return node;
+      }
+      function addLink(source, target, kind) {
+        links.push({source, target, kind});
+      }
+      const center = addNode({id:'center:ray-taste', type:'center', label:'Ray taste', x:centerX, y:centerY, vx:0, vy:0, r:42, fixed:true});
+      const collections = [...new Set(items.map(item => item.collection || 'inbox'))].sort();
+      const collectionNodes = collections.map((collection, index) => {
+        const angle = -Math.PI / 2 + index / Math.max(1, collections.length) * Math.PI * 2;
+        return addNode({id:'collection:' + collection, type:'collection', key:collection, label:collection, count:items.filter(item => item.collection === collection).length, x:centerX + Math.cos(angle) * Math.min(width, height) * .23, y:centerY + Math.sin(angle) * Math.min(width, height) * .23, vx:0, vy:0, r:24});
+      });
+      for (const node of collectionNodes) addLink(center, node, 'collection');
+
+      const tagCounts = new Map();
+      for (const item of items) for (const tag of item.tags || []) tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+      let tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).filter(pair => pair[1] > 1).slice(0, 24);
+      if (tags.length < 8) tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 14);
+      const tagNodes = tags.map((pair, index) => {
+        const angle = Math.PI / 2 + index / Math.max(1, tags.length) * Math.PI * 2;
+        return addNode({id:'tag:' + pair[0], type:'tag', key:pair[0], label:'#' + pair[0], count:pair[1], x:centerX + Math.cos(angle) * Math.min(width, height) * .42, y:centerY + Math.sin(angle) * Math.min(width, height) * .42, vx:0, vy:0, r:14 + Math.min(10, pair[1] * 2)});
+      });
+
+      const itemNodes = items.map((item, index) => {
+        const angle = index / Math.max(1, items.length) * Math.PI * 2 + .35;
+        const radius = Math.min(width, height) * (.32 + (index % 3) * .035);
+        const node = addNode({id:'item:' + item.ref_code, type:'item', key:item.ref_code, label:(item.ref_code ? item.ref_code + ' · ' : '') + item.title, data:item, x:centerX + Math.cos(angle) * radius, y:centerY + Math.sin(angle) * radius, vx:0, vy:0, r:13});
+        const collectionNode = byId.get('collection:' + (item.collection || 'inbox'));
+        if (collectionNode) addLink(collectionNode, node, 'item');
+        for (const tag of item.tags || []) {
+          const tagNode = byId.get('tag:' + tag);
+          if (tagNode) addLink(node, tagNode, 'tag');
+        }
+        return node;
+      });
+
+      const linkLayer = add('g', {'class':'graph-links'});
+      const nodeLayer = add('g', {'class':'graph-nodes'});
+      const linkEls = links.map(link => add('line', {'class':'graph-link', 'data-source':link.source.id, 'data-target':link.target.id, 'stroke-width':link.kind === 'collection' ? 1.6 : link.kind === 'tag' ? .75 : 1}, linkLayer));
+      const nodeEls = nodes.map(node => {
+        const group = add('g', {'class':'graph-node graph-node-' + node.type, 'data-id':node.id, tabindex:'0'}, nodeLayer);
+        const fill = node.type === 'center' ? '#d7ff38' : node.type === 'item' ? '#76d7ff' : '#111';
+        const stroke = node.type === 'item' ? '#76d7ff' : '#d7ff38';
+        const opacity = node.type === 'collection' || node.type === 'tag' ? .2 : .92;
+        add('circle', {r:node.r, fill, stroke, 'stroke-width':1.5, 'fill-opacity':opacity}, group);
+        const text = add('text', {y:node.r + 15, 'text-anchor':'middle', fill:node.type === 'item' ? '#f2f2e8' : '#d7ff38', 'font-size':node.type === 'item' ? 11 : 12}, group);
+        text.textContent = graphLabel(node.label, node.type === 'item' ? 34 : 24);
+        group.addEventListener('mouseenter', () => focusGraphNode(node));
+        group.addEventListener('focus', () => focusGraphNode(node));
+        group.addEventListener('mouseleave', clearGraphFocus);
+        group.addEventListener('blur', clearGraphFocus);
+        group.addEventListener('click', event => {
+          if (svg.dataset.dragMoved === '1') return;
+          event.stopPropagation();
+          if (node.type === 'item') openGraphItem(node.data);
+          if (node.type === 'collection') setCollectionFilter(node.key);
+          if (node.type === 'tag') setTag(node.key);
+        });
+        return group;
+      });
+      const nodeElById = new Map(nodes.map((node, index) => [node.id, nodeEls[index]]));
+      const adjacency = new Map(nodes.map(node => [node.id, new Set([node.id])]));
+      for (const link of links) {
+        adjacency.get(link.source.id).add(link.target.id);
+        adjacency.get(link.target.id).add(link.source.id);
+      }
+
+      function previewHtml(node) {
+        if (node.type === 'item') {
+          const item = node.data || {};
+          const src = item.src || '';
+          const image = src && /\.(avif|gif|jpe?g|png|svg|webp)(\?|$)/i.test(src) ? '<img src="' + safeGraphText(src) + '" alt="' + safeGraphText(item.title) + '">' : '';
+          const tagsText = (item.tags || []).slice(0, 8).map(tag => '#' + tag).join(' ');
+          return image + '<div class="graph-preview-body"><div class="graph-preview-kicker">' + safeGraphText(item.ref_code) + ' · ' + safeGraphText(item.collection) + '</div><div class="graph-preview-title">' + safeGraphText(item.title) + '</div><div class="graph-preview-copy">' + safeGraphText(item.why || 'Click to open the ref.') + '</div><div class="graph-preview-tags">' + safeGraphText(tagsText) + '</div></div>';
+        }
+        if (node.type === 'collection') {
+          return '<div class="graph-preview-body"><div class="graph-preview-kicker">collection</div><div class="graph-preview-title">' + safeGraphText(node.label) + '</div><div class="graph-preview-copy">' + node.count + ' refs. Click to filter the board; click again to clear.</div></div>';
+        }
+        if (node.type === 'tag') {
+          return '<div class="graph-preview-body"><div class="graph-preview-kicker">tag</div><div class="graph-preview-title">' + safeGraphText(node.label) + '</div><div class="graph-preview-copy">' + node.count + ' refs share this tag. Click to filter by it.</div></div>';
+        }
+        return '<div class="graph-preview-body"><div class="graph-preview-kicker">hub</div><div class="graph-preview-title">Ray taste</div><div class="graph-preview-copy">Refs grouped by broad collection and recurring tags.</div></div>';
+      }
+      function focusGraphNode(node) {
+        const active = adjacency.get(node.id) || new Set([node.id]);
+        nodeEls.forEach(group => {
+          const on = active.has(group.dataset.id);
+          group.classList.toggle('active', group.dataset.id === node.id);
+          group.classList.toggle('dim', !on);
+        });
+        linkEls.forEach(line => {
+          const on = line.dataset.source === node.id || line.dataset.target === node.id;
+          line.classList.toggle('active', on);
+          line.classList.toggle('dim', !on);
+        });
+        preview.innerHTML = previewHtml(node);
+        preview.classList.add('show');
+        preview.setAttribute('aria-hidden', 'false');
+      }
+      function clearGraphFocus() {
+        nodeEls.forEach(group => group.classList.remove('active', 'dim'));
+        linkEls.forEach(line => line.classList.remove('active', 'dim'));
+        preview.classList.remove('show');
+        preview.setAttribute('aria-hidden', 'true');
+      }
+      function render() {
+        linkEls.forEach((line, index) => {
+          const link = links[index];
+          line.setAttribute('x1', link.source.x);
+          line.setAttribute('y1', link.source.y);
+          line.setAttribute('x2', link.target.x);
+          line.setAttribute('y2', link.target.y);
+        });
+        nodeEls.forEach((group, index) => group.setAttribute('transform', 'translate(' + nodes[index].x + ',' + nodes[index].y + ')'));
+      }
+      function stepSimulation() {
+        for (const link of links) {
+          const dx = link.target.x - link.source.x;
+          const dy = link.target.y - link.source.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          const desired = link.kind === 'collection' ? 140 : link.kind === 'tag' ? 116 : 105;
+          const forceAmount = (dist - desired) * .006;
+          const fx = dx / dist * forceAmount;
+          const fy = dy / dist * forceAmount;
+          if (!link.source.fixed) { link.source.vx += fx; link.source.vy += fy; }
+          if (!link.target.fixed) { link.target.vx -= fx; link.target.vy -= fy; }
+        }
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist2 = dx * dx + dy * dy || .01;
+            const min = a.r + b.r + 42;
+            if (dist2 < min * min * 4) {
+              const dist = Math.sqrt(dist2);
+              const push = Math.min(.9, (min * min / dist2) * .035);
+              const fx = dx / dist * push;
+              const fy = dy / dist * push;
+              if (!a.fixed) { a.vx -= fx; a.vy -= fy; }
+              if (!b.fixed) { b.vx += fx; b.vy += fy; }
+            }
+          }
+        }
+        for (const node of nodes) {
+          if (node.fixed) continue;
+          node.vx += (centerX - node.x) * .0007;
+          node.vy += (centerY - node.y) * .0007;
+          node.vx *= .86;
+          node.vy *= .86;
+          node.x = Math.max(node.r + 16, Math.min(width - node.r - 16, node.x + node.vx));
+          node.y = Math.max(node.r + 16, Math.min(height - node.r - 34, node.y + node.vy));
+        }
+        render();
+      }
+      let ticks = 0;
+      function animate() {
+        stepSimulation();
+        ticks += 1;
+        if (ticks < 260) graphFrame = requestAnimationFrame(animate);
+      }
+      render();
+      animate();
+
+      let dragNode = null;
+      let dragStart = null;
+      svg.onpointerdown = event => {
+        const group = event.target.closest && event.target.closest('.graph-node');
+        if (!group) return;
+        dragNode = byId.get(group.dataset.id);
+        if (!dragNode || dragNode.type === 'center') return;
+        const rect = svg.getBoundingClientRect();
+        dragStart = {x:event.clientX, y:event.clientY, rect};
+        dragNode.fixed = true;
+        dragNode.vx = 0;
+        dragNode.vy = 0;
+        svg.dataset.dragMoved = '0';
+        svg.classList.add('dragging');
+        svg.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      };
+      svg.onpointermove = event => {
+        if (!dragNode || !dragStart) return;
+        const moved = Math.abs(event.clientX - dragStart.x) + Math.abs(event.clientY - dragStart.y);
+        if (moved > 4) svg.dataset.dragMoved = '1';
+        dragNode.x = event.clientX - dragStart.rect.left;
+        dragNode.y = event.clientY - dragStart.rect.top;
+        ticks = 0;
+        render();
+      };
+      svg.onpointerup = event => {
+        if (dragNode) {
+          dragNode.fixed = false;
+          dragNode = null;
+          graphFrame = requestAnimationFrame(animate);
+        }
+        svg.classList.remove('dragging');
+        try { svg.releasePointerCapture(event.pointerId); } catch (error) {}
+        setTimeout(() => { svg.dataset.dragMoved = '0'; }, 0);
+      };
+      svg.onpointerleave = () => {
+        if (dragNode) dragNode.fixed = false;
+        dragNode = null;
+        svg.classList.remove('dragging');
+      };
     }
   </script>
 </body>

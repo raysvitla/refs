@@ -14,8 +14,8 @@ Ray Refs is an are.na-ish board for keeping reference images, screenshots, watch
 ## What is inside
 
 - **Refs grid** — compact masonry board for visual references.
-- **Watchlist** — films, anime, series, games, books, and other “check later” drops.
-- **Tools** — useful apps, services, AI/media utilities, and workflows to try or remember, with direct `open tool ↗` buttons when a source URL exists.
+- **Watchlist** — films, anime, series, games, books, and other “check later” drops; enriched cards use canonical posters/covers and source-labeled ratings.
+- **Tools** — useful apps, services, AI/media utilities, and workflows to try or remember, with clean website/product screenshots, short descriptions, and direct `open tool ↗` buttons.
 - **Taste graph** — interactive map of refs, tags, and collections.
 - **Stable IDs** — every item gets a copyable `R###` code for future prompts and reviews.
 - **Static deploy** — no backend, no account, no tracking layer; just HTML and assets.

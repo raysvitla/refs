@@ -59,3 +59,9 @@ Steal the pattern:
 6. publish only the clean mirror.
 
 That is the whole trick. Annoyingly effective.
+
+## License
+
+Code, docs, and the static-site shell in this mirror are MIT licensed. See [`LICENSE`](LICENSE).
+
+Media under `assets/originals/` is reference material and is **not** covered by the MIT license unless explicitly stated. Rights remain with the original creators/rightsholders.

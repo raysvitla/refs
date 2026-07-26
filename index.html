@@ -114,10 +114,10 @@
     .graph-preview-tags { color:var(--blue); font-size:11px; }
     .graph-note { position:absolute; left:18px; bottom:16px; color:var(--muted); max-width:720px; pointer-events:none; }
     .space-shell { position:relative; min-height:640px; overflow:hidden; border:1px solid var(--line); border-radius:24px; background:radial-gradient(circle at 50% 45%, rgba(118,215,255,.10), transparent 22%), radial-gradient(circle at 67% 70%, rgba(215,255,56,.08), transparent 30%), #050505; }
-    #space { position:relative; height:clamp(560px, 72vh, 760px); overflow:hidden; perspective:1100px; cursor:grab; touch-action:none; isolation:isolate; }
+    #space { position:relative; height:clamp(760px, 90vh, 1120px); overflow:hidden; perspective:1600px; cursor:grab; touch-action:none; isolation:isolate; }
     #space.dragging { cursor:grabbing; }
     #spaceStage { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
-    .space-item { position:absolute; left:50%; top:50%; z-index:1; display:block; width:clamp(68px, 8.5vw, 140px); margin:-46px 0 0 -46px; padding:0; border:0; border-radius:3px; background:#0b0b0b; box-shadow:0 26px 65px rgba(0,0,0,.56); overflow:hidden; transform-style:preserve-3d; transition:filter .14s ease, box-shadow .14s ease; }
+    .space-item { position:absolute; left:50%; top:50%; z-index:1; display:block; width:clamp(58px, 6vw, 108px); margin:-38px 0 0 -38px; padding:0; border:0; border-radius:3px; background:#0b0b0b; box-shadow:0 26px 65px rgba(0,0,0,.56); overflow:hidden; transform-style:preserve-3d; transition:filter .14s ease, box-shadow .14s ease; }
     .space-item:hover, .space-item:focus-visible { z-index:6; outline:1px solid var(--accent); filter:brightness(1.08); box-shadow:0 35px 90px rgba(0,0,0,.75); }
     .space-item img { display:block; width:100%; aspect-ratio:1/1; object-fit:cover; background:#0b0b0b; }
     .space-item .space-label { display:block; padding:6px 7px 7px; color:var(--ink); background:rgba(5,5,5,.94); font-size:10px; line-height:1.08; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -158,7 +158,7 @@
   <header>
     <div class="bar">
       <div class="brandline"><h1>Ray Refs</h1><p class="dek">private are.na-like taste memory</p></div>
-      <div class="stats">121 items<br>built 2026-07-26 13:05 UTC</div>
+      <div class="stats">121 items<br>built 2026-07-26 13:37 UTC</div>
     </div>
     <div class="controls"><input id="q" placeholder="search taste memory…"><div class="filters"><button class="active" data-filter="">all <small>121</small></button><button data-filter="media.watchlist">media.watchlist <small>45</small></button><button data-filter="visual.image">visual.image <small>26</small></button><button data-filter="tools.library">tools.library <small>13</small></button><button data-filter="reading.watchlist">reading.watchlist <small>11</small></button><button data-filter="visual.motion">visual.motion <small>9</small></button><button data-filter="visual.web-ui">visual.web-ui <small>8</small></button><button data-filter="visual.object">visual.object <small>2</small></button><button data-filter="weird.internet">weird.internet <small>2</small></button><button data-filter="visual.brand">visual.brand <small>2</small></button><button data-filter="visual.poster">visual.poster <small>1</small></button><button data-filter="social.video">social.video <small>1</small></button><button data-filter="music.audio">music.audio <small>1</small></button></div></div>
   </header>
@@ -1784,8 +1784,6 @@ linked references from the post:
         stage.appendChild(empty);
         return;
       }
-      const collections = [...new Set(items.map(item => item.collection || 'inbox'))].sort();
-      const collectionIndex = new Map(collections.map((value, index) => [value, index]));
       const seedFor = value => [...String(value || '')].reduce((seed, char) => ((seed * 31) + char.charCodeAt(0)) >>> 0, 2166136261);
       const rand = seed => {
         let value = seed >>> 0;
@@ -1797,6 +1795,23 @@ linked references from the post:
           return ((result ^ result >>> 14) >>> 0) / 4294967296;
         };
       };
+      // Deterministic jittered grid: still a field, but each card gets its own breathing room.
+      const ordered = [...items].sort((a, b) => seedFor(a.ref_code || a.id || a.title) - seedFor(b.ref_code || b.id || b.title));
+      const columns = Math.max(5, Math.ceil(Math.sqrt(ordered.length * (width / height) * 1.45)));
+      const rows = Math.ceil(ordered.length / columns);
+      const minGapX = width * .90 / columns;
+      const minGapY = height * .84 / rows;
+      const placed = [];
+      const positions = new Map();
+      ordered.forEach((item, index) => {
+        const random = rand(seedFor(item.ref_code || item.id || item.title));
+        const column = index % columns;
+        const row = Math.floor(index / columns);
+        const x = (column - (columns - 1) / 2) * minGapX + (random() - .5) * minGapX * .18;
+        const y = (row - (rows - 1) / 2) * minGapY + (random() - .5) * minGapY * .18;
+        positions.set(item.ref_code || item.id || item.title, {x, y, random});
+        placed.push({x, y});
+      });
       const previewItem = item => {
         const src = item.src || '';
         const image = src && /\.(avif|gif|jpe?g|png|svg|webp)(\?|$)/i.test(src) ? '<img src="' + safeGraphText(src) + '" alt="' + safeGraphText(item.title) + '">' : '';
@@ -1810,15 +1825,12 @@ linked references from the post:
         preview.setAttribute('aria-hidden', 'true');
       };
       items.forEach(item => {
-        const random = rand(seedFor(item.ref_code || item.id || item.title));
-        const group = collectionIndex.get(item.collection || 'inbox') || 0;
-        const angle = -Math.PI / 2 + (group / Math.max(1, collections.length)) * Math.PI * 2;
-        const clusterX = Math.cos(angle) * Math.min(width, height) * .18;
-        const clusterY = Math.sin(angle) * Math.min(width, height) * .14;
-        const x = clusterX + (random() - .5) * width * .94;
-        const y = clusterY + (random() - .5) * height * .86;
-        const z = Math.round((random() - .5) * 820);
-        const scale = Math.max(.46, Math.min(.88, .58 + (z + 410) / 1950));
+        const point = positions.get(item.ref_code || item.id || item.title);
+        const random = point.random;
+        const x = point.x;
+        const y = point.y;
+        const z = Math.round((random() - .5) * 520);
+        const scale = Math.max(.52, Math.min(.79, .55 + (z + 260) / 2200));
         const card = document.createElement('button');
         card.type = 'button';
         card.className = 'space-item';

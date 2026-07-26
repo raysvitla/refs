@@ -113,6 +113,24 @@
     .graph-preview-copy { color:var(--muted); font-size:12px; }
     .graph-preview-tags { color:var(--blue); font-size:11px; }
     .graph-note { position:absolute; left:18px; bottom:16px; color:var(--muted); max-width:720px; pointer-events:none; }
+    .space-shell { position:relative; min-height:640px; overflow:hidden; border:1px solid var(--line); border-radius:24px; background:radial-gradient(circle at 50% 45%, rgba(118,215,255,.10), transparent 22%), radial-gradient(circle at 67% 70%, rgba(215,255,56,.08), transparent 30%), #050505; }
+    #space { position:relative; height:clamp(560px, 72vh, 760px); overflow:hidden; perspective:1100px; cursor:grab; touch-action:none; isolation:isolate; }
+    #space.dragging { cursor:grabbing; }
+    #spaceStage { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
+    .space-item { position:absolute; left:50%; top:50%; z-index:1; display:block; width:clamp(68px, 8.5vw, 140px); margin:-46px 0 0 -46px; padding:0; border:0; border-radius:3px; background:#0b0b0b; box-shadow:0 26px 65px rgba(0,0,0,.56); overflow:hidden; transform-style:preserve-3d; transition:filter .14s ease, box-shadow .14s ease; }
+    .space-item:hover, .space-item:focus-visible { z-index:6; outline:1px solid var(--accent); filter:brightness(1.08); box-shadow:0 35px 90px rgba(0,0,0,.75); }
+    .space-item img { display:block; width:100%; aspect-ratio:1/1; object-fit:cover; background:#0b0b0b; }
+    .space-item .space-label { display:block; padding:6px 7px 7px; color:var(--ink); background:rgba(5,5,5,.94); font-size:10px; line-height:1.08; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .space-item .space-code { color:var(--accent); font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+    .space-preview { position:absolute; right:16px; top:16px; z-index:8; width:min(310px, calc(100% - 32px)); overflow:hidden; border:1px solid rgba(118,215,255,.35); border-radius:18px; background:rgba(5,5,5,.88); box-shadow:0 20px 80px rgba(0,0,0,.55); backdrop-filter:blur(12px); opacity:0; transform:translateY(-6px); pointer-events:none; transition:opacity .12s ease, transform .12s ease; }
+    .space-preview.show { opacity:1; transform:none; }
+    .space-preview img { display:block; width:100%; max-height:230px; object-fit:cover; background:#050505; border-bottom:1px solid var(--line); }
+    .space-preview-body { padding:12px; display:grid; gap:6px; }
+    .space-preview-kicker { color:var(--blue); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
+    .space-preview-title { color:var(--ink); font-weight:800; line-height:1.08; }
+    .space-preview-copy { color:var(--muted); font-size:12px; }
+    .space-hud { position:absolute; left:18px; bottom:16px; z-index:8; max-width:min(680px, calc(100% - 36px)); color:var(--muted); font-size:11px; letter-spacing:.04em; text-transform:uppercase; pointer-events:none; }
+    .space-hud b { color:var(--accent); }
     .lightbox { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:22px; background:rgba(0,0,0,.88); backdrop-filter:blur(12px); }
     .lightbox.open { display:flex; }
     .lightbox-inner { width:min(96vw, 1500px); max-height:94vh; display:grid; grid-template-rows:minmax(0, 1fr) auto auto; gap:12px; }
@@ -140,13 +158,13 @@
   <header>
     <div class="bar">
       <div class="brandline"><h1>Ray Refs</h1><p class="dek">private are.na-like taste memory</p></div>
-      <div class="stats">119 items<br>built 2026-07-25 08:51 UTC</div>
+      <div class="stats">119 items<br>built 2026-07-26 12:52 UTC</div>
     </div>
     <div class="controls"><input id="q" placeholder="search taste memory…"><div class="filters"><button class="active" data-filter="">all <small>119</small></button><button data-filter="media.watchlist">media.watchlist <small>45</small></button><button data-filter="visual.image">visual.image <small>26</small></button><button data-filter="tools.library">tools.library <small>12</small></button><button data-filter="reading.watchlist">reading.watchlist <small>11</small></button><button data-filter="visual.motion">visual.motion <small>9</small></button><button data-filter="visual.web-ui">visual.web-ui <small>7</small></button><button data-filter="visual.object">visual.object <small>2</small></button><button data-filter="weird.internet">weird.internet <small>2</small></button><button data-filter="visual.brand">visual.brand <small>2</small></button><button data-filter="visual.poster">visual.poster <small>1</small></button><button data-filter="social.video">social.video <small>1</small></button><button data-filter="music.audio">music.audio <small>1</small></button></div></div>
   </header>
   <main>
     <div class="top">
-      <div class="view-tabs"><button class="active" data-view="gridView">are.na grid</button><button data-view="watchlistView">watchlist <small>45</small></button><button data-view="readingView">reading <small>11</small></button><button data-view="toolsView">tools <small>12</small></button><button data-view="graphView">taste graph</button></div>
+      <div class="view-tabs"><button class="active" data-view="gridView">are.na grid</button><button data-view="watchlistView">watchlist <small>45</small></button><button data-view="readingView">reading <small>11</small></button><button data-view="toolsView">tools <small>12</small></button><button data-view="graphView">taste graph</button><button data-view="spaceView">space field</button></div>
       <div class="grid-size" aria-label="Grid size"><button data-grid-size="compact" type="button">compact</button><button class="active" data-grid-size="comfy" type="button">comfy</button><button data-grid-size="big" type="button">big</button></div>
       <details class="tag-panel"><summary>tag filters</summary><div class="top-tags"><button data-tag="watchlist" type="button">#watchlist <small>56</small></button><button data-tag="film" type="button">#film <small>37</small></button><button data-tag="tool" type="button">#tool <small>12</small></button><button data-tag="reading" type="button">#reading <small>11</small></button><button data-tag="evgen-copi-gorisek" type="button">#evgen-copi-gorisek <small>11</small></button><button data-tag="contemporary-painting" type="button">#contemporary-painting <small>11</small></button><button data-tag="figurative-painting" type="button">#figurative-painting <small>11</small></button><button data-tag="blurred-face" type="button">#blurred-face <small>11</small></button><button data-tag="soft-surrealism" type="button">#soft-surrealism <small>11</small></button><button data-tag="fashion-pose" type="button">#fashion-pose <small>11</small></button><button data-tag="oil-stick" type="button">#oil-stick <small>11</small></button><button data-tag="acrylic" type="button">#acrylic <small>11</small></button><button data-tag="stylized-body" type="button">#stylized-body <small>11</small></button><button data-tag="career" type="button">#career <small>9</small></button><button data-tag="helplessness" type="button">#helplessness <small>8</small></button><button data-tag="odyssey-cluster" type="button">#odyssey-cluster <small>7</small></button><button data-tag="website" type="button">#website <small>7</small></button><button data-tag="archive-ui" type="button">#archive-ui <small>7</small></button><button data-tag="book" type="button">#book <small>6</small></button><button data-tag="work" type="button">#work <small>6</small></button><button data-tag="psychedelic" type="button">#psychedelic <small>6</small></button><button data-tag="instagram-carousel" type="button">#instagram-carousel <small>6</small></button><button data-tag="instagram-reel" type="button">#instagram-reel <small>6</small></button><button data-tag="belarusian-literature" type="button">#belarusian-literature <small>5</small></button><button data-tag="belarus" type="button">#belarus <small>5</small></button><button data-tag="article" type="button">#article <small>5</small></button><button data-tag="1960s" type="button">#1960s <small>4</small></button><button data-tag="perfect-days" type="button">#perfect-days <small>4</small></button><button data-tag="watchlog" type="button">#watchlog <small>4</small></button><button data-tag="fisheye" type="button">#fisheye <small>4</small></button><button data-tag="фишай" type="button">#фишай <small>4</small></button><button data-tag="рыбий-глаз" type="button">#рыбий-глаз <small>4</small></button><button data-tag="science-fiction" type="button">#science-fiction <small>4</small></button><button data-tag="frontend" type="button">#frontend <small>4</small></button><button data-tag="sculpture" type="button">#sculpture <small>4</small></button><button data-tag="fashion" type="button">#fashion <small>4</small></button><button data-tag="skeuomorphism" type="button">#skeuomorphism <small>4</small></button><button data-tag="fragment-17b" type="button">#fragment-17b <small>4</small></button><button data-tag="cgi" type="button">#cgi <small>4</small></button><button data-tag="digital-render" type="button">#digital-render <small>4</small></button><button data-tag="ancient-rome" type="button">#ancient-rome <small>3</small></button><button data-tag="surreal" type="button">#surreal <small>3</small></button><button data-tag="1970s" type="button">#1970s <small>3</small></button><button data-tag="documentary" type="button">#documentary <small>3</small></button><button data-tag="tiff" type="button">#tiff <small>3</small></button><button data-tag="dance" type="button">#dance <small>3</small></button><button data-tag="templates" type="button">#templates <small>3</small></button><button data-tag="video-tool" type="button">#video-tool <small>3</small></button></div></details>
     </div>
@@ -1513,6 +1531,7 @@ linked references from the post:
   </div>
 </article></div></section>
     <section id="graphView" class="view"><div class="graph-shell"><svg id="graph" role="img" aria-label="Interactive taste graph"></svg><div id="graphPreview" class="graph-preview" aria-hidden="true"></div><p class="graph-note">Live taste graph: drag nodes, hover for preview, click refs to open. Collection/tag nodes filter the board.</p></div></section>
+    <section id="spaceView" class="view"><div class="space-shell"><div id="space" role="application" aria-label="Spatial browse view"><div id="spaceStage"></div><div id="spacePreview" class="space-preview" aria-hidden="true"></div><p class="space-hud"><b>Space field</b> · drag to orbit · scroll to zoom · click a shard to open · depth is browse play, not a claim about similarity</p></div></div></section>
   </main>
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close enlarged image">×</button>
@@ -1553,6 +1572,7 @@ linked references from the post:
         card.style.display = okFilter && okTag && okSearch ? '' : 'none';
       });
       if (document.getElementById('graphView').classList.contains('active')) drawGraph();
+      if (document.getElementById('spaceView').classList.contains('active')) drawSpace();
     }
     function syncTagButtons() {
       document.querySelectorAll('[data-tag]').forEach(btn => btn.classList.toggle('active', btn.dataset.tag === tagFilter));
@@ -1682,6 +1702,7 @@ linked references from the post:
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(btn.dataset.view).classList.add('active');
       if (btn.dataset.view === 'graphView') drawGraph();
+      if (btn.dataset.view === 'spaceView') drawSpace();
     }));
     gridButtons.forEach(btn => btn.addEventListener('click', () => {
       gridButtons.forEach(b => b.classList.remove('active'));
@@ -1714,6 +1735,114 @@ linked references from the post:
       if (event.key === 'ArrowLeft') { event.preventDefault(); switchLightbox(-1); return; }
       if (event.key === 'ArrowRight') { event.preventDefault(); switchLightbox(1); }
     });
+
+    let spaceState = {yaw:-8, pitch:5, zoom:1, panX:0, panY:0};
+    function drawSpace() {
+      const space = document.getElementById('space');
+      const stage = document.getElementById('spaceStage');
+      const preview = document.getElementById('spacePreview');
+      if (!space || !stage || !preview) return;
+      const rawItems = JSON.parse(document.getElementById('graphData').textContent || '[]');
+      const items = rawItems.filter(graphMatches);
+      const width = space.clientWidth || 1200;
+      const height = space.clientHeight || 640;
+      stage.innerHTML = '';
+      preview.innerHTML = '';
+      preview.classList.remove('show');
+      preview.setAttribute('aria-hidden', 'true');
+      const applyCamera = () => {
+        stage.style.transform = 'translate3d(' + spaceState.panX + 'px,' + spaceState.panY + 'px,0) rotateX(' + spaceState.pitch + 'deg) rotateY(' + spaceState.yaw + 'deg) scale(' + spaceState.zoom + ')';
+      };
+      applyCamera();
+      if (!items.length) {
+        const empty = document.createElement('p');
+        empty.className = 'space-hud';
+        empty.textContent = 'No refs match the current filters.';
+        stage.appendChild(empty);
+        return;
+      }
+      const collections = [...new Set(items.map(item => item.collection || 'inbox'))].sort();
+      const collectionIndex = new Map(collections.map((value, index) => [value, index]));
+      const seedFor = value => [...String(value || '')].reduce((seed, char) => ((seed * 31) + char.charCodeAt(0)) >>> 0, 2166136261);
+      const rand = seed => {
+        let value = seed >>> 0;
+        return () => {
+          value += 0x6D2B79F5;
+          let result = value;
+          result = Math.imul(result ^ result >>> 15, result | 1);
+          result ^= result + Math.imul(result ^ result >>> 7, result | 61);
+          return ((result ^ result >>> 14) >>> 0) / 4294967296;
+        };
+      };
+      const previewItem = item => {
+        const src = item.src || '';
+        const image = src && /\.(avif|gif|jpe?g|png|svg|webp)(\?|$)/i.test(src) ? '<img src="' + safeGraphText(src) + '" alt="' + safeGraphText(item.title) + '">' : '';
+        const tags = (item.tags || []).slice(0, 7).map(tag => '#' + tag).join(' ');
+        preview.innerHTML = image + '<div class="space-preview-body"><div class="space-preview-kicker">' + safeGraphText(item.ref_code) + ' · ' + safeGraphText(item.collection) + '</div><div class="space-preview-title">' + safeGraphText(item.title) + '</div><div class="space-preview-copy">' + safeGraphText(item.why || 'Click to open the ref.') + '</div><div class="graph-preview-tags">' + safeGraphText(tags) + '</div></div>';
+        preview.classList.add('show');
+        preview.setAttribute('aria-hidden', 'false');
+      };
+      const clearPreview = () => {
+        preview.classList.remove('show');
+        preview.setAttribute('aria-hidden', 'true');
+      };
+      items.forEach(item => {
+        const random = rand(seedFor(item.ref_code || item.id || item.title));
+        const group = collectionIndex.get(item.collection || 'inbox') || 0;
+        const angle = -Math.PI / 2 + (group / Math.max(1, collections.length)) * Math.PI * 2;
+        const clusterX = Math.cos(angle) * Math.min(width, height) * .18;
+        const clusterY = Math.sin(angle) * Math.min(width, height) * .14;
+        const x = clusterX + (random() - .5) * width * .94;
+        const y = clusterY + (random() - .5) * height * .86;
+        const z = Math.round((random() - .5) * 820);
+        const scale = Math.max(.46, Math.min(.88, .58 + (z + 410) / 1950));
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'space-item';
+        card.dataset.ref = item.ref_code || '';
+        card.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,' + z + 'px) rotateZ(' + Math.round((random() - .5) * 7) + 'deg) scale(' + scale.toFixed(3) + ')';
+        card.style.zIndex = String(Math.round(z + 1000));
+        card.setAttribute('aria-label', (item.ref_code ? item.ref_code + ' · ' : '') + (item.title || 'Untitled'));
+        const src = item.src || '';
+        const image = src && /\.(avif|gif|jpe?g|png|svg|webp)(\?|$)/i.test(src) ? '<img src="' + safeGraphText(src) + '" alt="" loading="lazy">' : '';
+        card.innerHTML = image + '<span class="space-label"><span class="space-code">' + safeGraphText(item.ref_code) + '</span> · ' + safeGraphText(item.title) + '</span>';
+        card.addEventListener('mouseenter', () => previewItem(item));
+        card.addEventListener('focus', () => previewItem(item));
+        card.addEventListener('mouseleave', clearPreview);
+        card.addEventListener('blur', clearPreview);
+        card.addEventListener('click', () => openGraphItem(item));
+        stage.appendChild(card);
+      });
+      let drag = null;
+      space.onpointerdown = event => {
+        if (event.target.closest('.space-item')) return;
+        drag = {x:event.clientX, y:event.clientY, yaw:spaceState.yaw, pitch:spaceState.pitch, panX:spaceState.panX, panY:spaceState.panY};
+        space.classList.add('dragging');
+        space.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      };
+      space.onpointermove = event => {
+        if (!drag) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        spaceState.yaw = Math.max(-30, Math.min(30, drag.yaw + dx * .10));
+        spaceState.pitch = Math.max(-22, Math.min(22, drag.pitch - dy * .08));
+        spaceState.panX = Math.max(-120, Math.min(120, drag.panX + dx * .12));
+        spaceState.panY = Math.max(-70, Math.min(70, drag.panY + dy * .10));
+        applyCamera();
+      };
+      space.onpointerup = event => {
+        drag = null;
+        space.classList.remove('dragging');
+        try { space.releasePointerCapture(event.pointerId); } catch (error) {}
+      };
+      space.onpointerleave = () => { if (drag) { drag = null; space.classList.remove('dragging'); } };
+      space.onwheel = event => {
+        event.preventDefault();
+        spaceState.zoom = Math.max(.68, Math.min(1.65, spaceState.zoom - event.deltaY * .0008));
+        applyCamera();
+      };
+    }
 
     let graphFrame = 0;
     function safeGraphText(value) {

@@ -8,6 +8,12 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/favicon-180.png">
   <style>
+    @font-face { font-family: "Inter"; src: url("assets/fonts/InterVariable.woff2") format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
+    :root { --refs-display: "SF Pro Display", "SF Pro Text", Inter, -apple-system, BlinkMacSystemFont, sans-serif; --refs-text: Inter, "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif; }
+    body, button, input, select { font-family: var(--refs-text); }
+    h1, h2, h3, .brandline { font-family: var(--refs-display); }
+  </style>
+  <style>
     :root { color-scheme: dark; --bg:#080808; --panel:#111; --panel2:#171717; --ink:#f2f2e8; --muted:#8d8d84; --line:#2b2b2b; --accent:#d7ff38; --hot:#ff4d8d; --blue:#76d7ff; }
     * { box-sizing:border-box; }
     body { margin:0; font:14px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif; background:radial-gradient(circle at 30% -20%, #263000 0, transparent 35%), var(--bg); color:var(--ink); }
